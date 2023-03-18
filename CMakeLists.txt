@@ -29,7 +29,7 @@ INCLUDE(FindProtobuf)
 FIND_PACKAGE(Protobuf REQUIRED)
 INCLUDE_DIRECTORIES(${PROTOBUF_INCLUDE_DIR})
 
-# gen src and header
+## gen src and header
 #PROTOBUF_GENERATE_CPP(PROTO_SRCS PROTO_HDRS
 #        common/proto/anna.proto
 #        common/proto/common.proto
@@ -39,7 +39,8 @@ INCLUDE_DIRECTORIES(${PROTOBUF_INCLUDE_DIR})
 #include_directories(${PROTO_HDRS})
 #include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-## submodule
+# submodule
 add_subdirectory(src/executor executor)
 add_subdirectory(src/manager manager)
 add_subdirectory(src/coordinator coordinator)
+add_subdirectory(src/scheduler scheduler)

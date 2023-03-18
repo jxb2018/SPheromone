@@ -3,4 +3,4 @@ set(CMAKE_CXX_STANDARD 14)
 SET(EXECUTOR_SOURCE executor.cpp)
 
 ADD_EXECUTABLE(executor ${EXECUTOR_SOURCE})
-TARGET_LINK_LIBRARIES(executor libzmq cppzmq spdlog shm-ipc rt)
+TARGET_LINK_LIBRARIES(executor libzmq cppzmq spdlog shm-ipc rt fmt yaml-cpp dl)

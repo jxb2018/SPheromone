@@ -1,5 +1,3 @@
-set(CMAKE_CXX_STANDARD 14)
-
 SET(MANAGEMENT_SOURCE
         ${BASE_DIR}/src/manager/manager.cpp
         ${BASE_DIR}/common/include/zmq/zmq_util.cpp
@@ -7,4 +5,4 @@ SET(MANAGEMENT_SOURCE
         ${BASE_DIR}/src-gen/operation.pb.cc)
 
 ADD_EXECUTABLE(manager ${MANAGEMENT_SOURCE})
-TARGET_LINK_LIBRARIES(manager libzmq cppzmq spdlog shm-ipc rt fmt yaml-cpp dl ${Protobuf_LIBRARIES})
+TARGET_LINK_LIBRARIES(manager libzmq cppzmq spdlog shm-ipc rt fmt yaml-cpp dl ${PROTOBUF_LIBRARIES})

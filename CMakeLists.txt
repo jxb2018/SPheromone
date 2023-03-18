@@ -4,6 +4,8 @@ set(CMAKE_CXX_STANDARD 14)
 
 add_compile_options(-DCPPZMQ_BUILD_TESTS=OFF)
 
+set(BASE_DIR ${CMAKE_SOURCE_DIR})
+
 # header
 include_directories(deps/shm-ipc/include)
 include_directories(include)
@@ -21,5 +23,10 @@ set(CPPZMQ_BUILD_TESTS FALSE)
 set(ZeroMQ_DIR ${CMAKE_CURRENT_BINARY_DIR}/deps/zeromq)
 add_subdirectory(deps/cppzmq cppzmq)
 
+# protobuf
+find_package(Protobuf REQUIRED)
+include_directories(${Protobuf_INCLUDE_DIRS})
+
 # submodule
 add_subdirectory(src/executor executor)
+add_subdirectory(src/manager manager)

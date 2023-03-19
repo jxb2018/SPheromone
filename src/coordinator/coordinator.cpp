@@ -48,7 +48,7 @@ void run(Address public_ip, Address private_ip, unsigned thread_id) {
     if (res == 0) {
         std::cout << "Successfully set max socket number to " << kMaxSocketNumber << std::endl;
     } else {
-        std::cerr << fmt::format("E: socket error number {} ({})\n", errno, zmq_strerror(errno));
+        std::cerr << fmt::format("E: socket error number {} ({})", errno, zmq_strerror(errno)) << std::endl;
     }
 
     SocketCache pushers(&context, ZMQ_PUSH);
@@ -216,9 +216,9 @@ void run(Address public_ip, Address private_ip, unsigned thread_id) {
         if (duration >= CoordReportThreshold) {
             report_start = std::chrono::system_clock::now();
             // TODO remote out-of-data node status
-            std::cout << fmt::format("Coordinator report. notify_count: {}, query_count: {}, call_count: {}\n",
+            std::cout << fmt::format("Coordinator report. notify_count: {}, query_count: {}, call_count: {}",
                                      notify_count,
-                                     query_count, call_count);
+                                     query_count, call_count) << std::endl;
 
         }
 

@@ -102,7 +102,7 @@ void run(Address ip) {
             std::cout << fmt::format("Coord Query app_name: {}\n", app_name);
 
         }
-        std::cout << std::flush;
+//        std::cout << std::flush;
     }
 }
 

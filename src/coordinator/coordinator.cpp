@@ -222,6 +222,7 @@ void run(Address public_ip, Address private_ip, unsigned thread_id) {
 
         }
 
+        std::cout << std::flush;
     }
 }
 

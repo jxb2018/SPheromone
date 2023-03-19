@@ -12,7 +12,7 @@ void func_call_handler(string &serialized, SocketCache &pushers,
 
     string app_name = call_msg.app_name();
 
-    map <Address, string> scheduled_node_msg;
+    map<Address, string> scheduled_node_msg;
     auto req_num = call_msg.requests_size();
     string source = call_msg.source();
 
@@ -42,7 +42,7 @@ void func_call_handler(string &serialized, SocketCache &pushers,
     // batch scheduling
     if (req_num > 1) {
         int total_executors = 0;
-        vector <pair<Address, int>> avail_nodes;
+        vector<pair<Address, int>> avail_nodes;
         for (auto &pair: node_status_map) {
             if (!source.empty() && source == pair.first) {
                 continue;
@@ -121,7 +121,7 @@ void func_call_handler(string &serialized, SocketCache &pushers,
         auto return_stamp = std::chrono::duration_cast<std::chrono::microseconds>(
                 std::chrono::system_clock::now().time_since_epoch()).count();
         std::cout << fmt::format("No worker for app function call {}. req: {}, recv: {}, return: {}", app_name, req_num,
-                  receive_req_stamp, return_stamp);
+                                 receive_req_stamp, return_stamp) << std::endl;
 
         if (!resp_address.empty()) {
             FunctionCallResponse resp;
@@ -140,6 +140,7 @@ void func_call_handler(string &serialized, SocketCache &pushers,
             string func_exec_addr = get_func_exec_address(node_msg.first, rand_r(&seed) % io_thread_num);
             kZmqUtil->send_string(node_msg.second, &pushers[func_exec_addr]);
         }
-        std::cout << fmt::format("App function call {}. recv: {}, scheduled {}.", app_name, receive_req_stamp, scheduled_stamp);
+        std::cout << fmt::format("App function call {}. recv: {}, scheduled {}.", app_name, receive_req_stamp,
+                                 scheduled_stamp) << std::endl;
     }
 }

@@ -253,7 +253,8 @@ public:
                 auto done_msg_stamp = std::chrono::duration_cast<std::chrono::microseconds>(
                         std::chrono::system_clock::now().time_since_epoch()).count();
                 msg_processed++;
-                std::cout << fmt::format("Msg processed io_thread {}. pop: {}, done: {}.\n", tid, pop_msg_stamp, done_msg_stamp);
+                std::cout << fmt::format("Msg processed io_thread {}. pop: {}, done: {}.", tid, pop_msg_stamp,
+                                         done_msg_stamp) << std::endl;
             }
 
             vector<RecvMsg> comm_resps;
@@ -293,7 +294,8 @@ public:
 
                 for (auto &dep: coord_msg.dependencies()) {
                     if (dep.type() != DependencyType::DIRECT) {
-                        std::cerr << fmt::format("Non-Direct dependency {} detected in coord_msg for app: {}.\n", dep.type(), app_name);
+                        std::cerr << fmt::format("Non-Direct dependency {} detected in coord_msg for app: {}.",
+                                                 dep.type(), app_name) << std::endl;
                         continue;
                     }
                     auto src_func = dep.src_functions(0);
@@ -491,7 +493,7 @@ public:
             if (thread_id == 0) {
                 send_data_req_base(key, socket_cache_);
             } else {
-                std::cout << fmt::format("Push send request msg to thread {}\n", thread_id);
+                std::cout << fmt::format("Push send request msg to thread {}", thread_id) << std::endl;
                 SecondaryThreadMsg msg = {SecondaryThreadMsgType::SendReq, key, NULL, 0};
                 secondary_thread_msg_queues[thread_id - 1]->push(msg);
             }
@@ -506,15 +508,15 @@ public:
             Key key = response.tuples(0).key();
 
             if (response.error() == AnnaError::TIMEOUT) {
-                std::cout << fmt::format("Kvs request io_thread {} for key {} timed out.\n", tid, key);
+                std::cout << fmt::format("Kvs request io_thread {} for key {} timed out.", tid, key) << std::endl;
                 if (response.type() == RequestType::GET) {
                     kvs_clients[tid]->get_async(key);
                 } else {
                     // TODO re-issue put request
                 }
             } else {
-                std::cout << fmt::format("Thread {} Kvs response type {} error code {}\n", tid, response.type(),
-                           response.tuples(0).error());
+                std::cout << fmt::format("Thread {} Kvs response type {} error code {}", tid, response.type(),
+                                         response.tuples(0).error()) << std::endl;
                 if (response.type() == RequestType::GET && response.tuples(0).error() != 1) {
                     auto kvs_recv_stamp = std::chrono::duration_cast<std::chrono::microseconds>(
                             std::chrono::system_clock::now().time_since_epoch()).count();
@@ -532,8 +534,9 @@ public:
 
                     auto kvs_get_stamp = std::chrono::duration_cast<std::chrono::microseconds>(
                             std::chrono::system_clock::now().time_since_epoch()).count();
-                    std::cout << fmt::format("Kvs GET response io_thread {}. recv: {}, copy: {}.\n", tid, kvs_recv_stamp,
-                               kvs_get_stamp);
+                    std::cout
+                            << fmt::format("Kvs GET response io_thread {}. recv: {}, copy: {}.", tid, kvs_recv_stamp,
+                                           kvs_get_stamp) << std::endl;
                 } else if (response.type() == RequestType::PUT) {
                     auto kvs_recv_stamp = std::chrono::duration_cast<std::chrono::microseconds>(
                             std::chrono::system_clock::now().time_since_epoch()).count();
@@ -541,7 +544,8 @@ public:
                     resp.msg_type_ = RecvMsgType::KvsPutResp;
                     resp.data_key_ = key;
                     comm_resps.push_back(resp);
-                    std::cout << fmt::format("Kvs PUT response io_thread {}. recv: {}.\n", tid, kvs_recv_stamp);
+                    std::cout << fmt::format("Kvs PUT response io_thread {}. recv: {}.", tid, kvs_recv_stamp)
+                              << std::endl;
                 }
             }
         }
@@ -602,8 +606,9 @@ private:
             resp.func_args_.push_back(args);
         }
         string name_to_log = resp.func_name_.size() == 1 ? resp.func_name_[0] : resp.app_name_;
-        std::cout << fmt::format("Function call {} io_thread {}. num: {}, recv: {}.\n", name_to_log, tid, resp.func_name_.size(),
-                   receive_call_stamp);
+        std::cout << fmt::format("Function call {} io_thread {}. num: {}, recv: {}.", name_to_log, tid,
+                                 resp.func_name_.size(),
+                                 receive_call_stamp) << std::endl;
     }
 
     void handle_data_request(zmq::message_t &message, SocketCache &pushers, unsigned tid = 0) {
@@ -643,10 +648,12 @@ private:
                     std::chrono::system_clock::now().time_since_epoch()).count();
 
             std::cout << fmt::format(
-                    "Data request io_thread {}. key: {}, size: {}, recv: {}, parse: {}, get: {}, send: {}, finish: {}\n",
-                    tid, key, data_info_pair.second, data_req_stamp, parse_stamp, get_stamp, send_stamp, finish_stamp);
+                    "Data request io_thread {}. key: {}, size: {}, recv: {}, parse: {}, get: {}, send: {}, finish: {}",
+                    tid, key, data_info_pair.second, data_req_stamp, parse_stamp, get_stamp, send_stamp, finish_stamp)
+                      << std::endl;
         } else {
-            std::cout << fmt::format("Data request io_thread {} w/o local data found. key: {}, recv: {}.\n", tid, key, data_req_stamp);
+            std::cout << fmt::format("Data request io_thread {} w/o local data found. key: {}, recv: {}.", tid, key,
+                                     data_req_stamp) << std::endl;
         }
     }
 
@@ -668,8 +675,8 @@ private:
 
         auto data_copy_stamp = std::chrono::duration_cast<std::chrono::microseconds>(
                 std::chrono::system_clock::now().time_since_epoch()).count();
-        std::cout << fmt::format("Data response io_thread {}. key: {}, size: {}, recv: {}, parse: {}, copy: {}.\n",
-                   tid, key, resp.data_size_, data_resp_stamp, parse_stamp, data_copy_stamp);
+        std::cout << fmt::format("Data response io_thread {}. key: {}, size: {}, recv: {}, parse: {}, copy: {}.",
+                                 tid, key, resp.data_size_, data_resp_stamp, parse_stamp, data_copy_stamp) << std::endl;
     }
 
     void send_data_req_base(string &key, SocketCache &pushers, unsigned tid = 0) {
@@ -682,7 +689,7 @@ private:
             //   pending_key_query_map_[key_string].first = std::chrono::system_clock::now();
             // }
             // pending_key_query_map_[key_string].second = request;
-            std::cout << fmt::format("No data location for key {}\n", key);
+            std::cout << fmt::format("No data location for key {}", key) << std::endl;
             return;
         }
         auto key_len = static_cast<uint8_t>(key.size());
@@ -700,19 +707,20 @@ private:
 
         auto send_stamp = std::chrono::duration_cast<std::chrono::microseconds>(
                 std::chrono::system_clock::now().time_since_epoch()).count();
-        std::cout << fmt::format("Thread {} send data request for key {} start {} parse {} at {}.\n", tid, key, start_stamp,
-                   parse_stamp, send_stamp);
+        std::cout
+                << fmt::format("Thread {} send data request for key {} start {} parse {} at {}.", tid, key, start_stamp,
+                               parse_stamp, send_stamp) << std::endl;
     }
 
     void get_kvs_async_base(string &key, unsigned tid = 0) {
         kvs_clients[tid]->get_async(key);
-        std::cout << fmt::format("Thread {} issue async GET key {}\n", tid, key);
+        std::cout << fmt::format("Thread {} issue async GET key {}", tid, key) << std::endl;
     }
 
     void put_kvs_async_base(string &key, char *val_ptr, unsigned val_size, unsigned tid = 0) {
         string rid = kvs_clients[tid]->put_async(key, serialize(generate_timestamp(tid), string{val_ptr, val_size}),
                                                  LatticeType::LWW);
-        std::cout << fmt::format("Thread {} issue async PUT key {}\n", tid, key);
+        std::cout << fmt::format("Thread {} issue async PUT key {}", tid, key) << std::endl;
     }
 
     void notify_put_base(const BucketKey &bucket_key, vector<string> &active_triggers, const string &resp_address,
@@ -720,7 +728,8 @@ private:
         Address notif_thread = get_notifying_thread(bucket_key.bucket_);
 
         if (notif_thread.empty()) {
-            std::cout << fmt::format("No coordinator thread found when sync on bucket {}\n", bucket_key.bucket_);
+            std::cout << fmt::format("No coordinator thread found when sync on bucket {}", bucket_key.bucket_)
+                      << std::endl;
             return;
         }
 

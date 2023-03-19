@@ -26,6 +26,8 @@
 
 class ZmqUtilInterface {
 public:
+    virtual ~ZmqUtilInterface()= default;;
+
     // Converts the data within a `zmq::message_t` into a string.
     string message_to_string(const zmq::message_t &message);
 

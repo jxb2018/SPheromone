@@ -56,7 +56,7 @@ void notify_handler(string &serialized, SocketCache &pushers,
             else {
                 kvs_error = KVSError::BUCKET_NE;
                 //log->info("Notifying handler error: Bucket not found");
-                std::cout << "Notifying handler error: Bucket not found\n";
+                std::cout << "Notifying handler error: Bucket not found\n" << std::endl;
                 break;
             }
         }
@@ -190,17 +190,10 @@ void notify_handler(string &serialized, SocketCache &pushers,
                         string call_serialized;
                         internalCall.SerializeToString(&call_serialized);
                         kZmqUtil->send_string(call_serialized, &pushers[address]);
-//                        log->info(
-//                                "App data-driven call {} to {} arg_size {}. recv: {}, trigger: {}, check: {}, package: {}, scheduled {}.",
-//                                action.function_, routed_worker, action.session_keys_.size(), receive_req_stamp,
-//                                trigger_stamp, check_stamp, package_stamp, scheduled_stamp);
-
-                        std::cout << "App data-driven call " << action.function_
-                                  << " to " << routed_worker
-                                  << " arg_size " << action.session_keys_.size()
-                                  << ". recv: " << receive_req_stamp << ", trigger: " << trigger_stamp
-                                  << ", check: " << check_stamp << ", package: " << package_stamp << ", scheduled "
-                                  << scheduled_stamp << ".\n";
+                        std::cout << fmt::format(
+                                "App data-driven call {} to {} arg_size {}. recv: {}, trigger: {}, check: {}, package: {}, scheduled {}.",
+                                action.function_, routed_worker, action.session_keys_.size(), receive_req_stamp,
+                                trigger_stamp, check_stamp, package_stamp, scheduled_stamp) << std::endl;
 
                         // update avail executors in advance
                         node_status_map[routed_worker].avail_executors_--;

@@ -44,3 +44,6 @@ add_subdirectory(src/executor executor)
 add_subdirectory(src/manager manager)
 add_subdirectory(src/coordinator coordinator)
 add_subdirectory(src/scheduler scheduler)
+
+# benchmarks
+add_subdirectory(benchmarks benchmarks)

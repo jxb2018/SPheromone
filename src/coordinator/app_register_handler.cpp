@@ -82,5 +82,5 @@ void app_register_handler(string &serialized, string &private_ip, unsigned &thre
         kZmqUtil->send_string(msg_serialized, &pushers[address]);
     }
 //    log->info("Application registered. name: {}", appRegist.app_name());
-    std::cout << "Application registered. name: " << appRegist.app_name() << std::endl;
+    std::cout << fmt::format("Application registered. name: {}", appRegist.app_name()) << std::endl;
 }

@@ -27,7 +27,7 @@ bool load_function(string &func_name, map<string, CppFunction> &name_func_map) {
     string lib_name = funcDir + func_name + ".so";
     void *lib_handle = dlopen(lib_name.c_str(), RTLD_LAZY);
     if (!lib_handle) {
-        std::cerr << fmt::format("Load lib {}.so failed\n", func_name);
+        std::cerr << fmt::format("Load lib {}.so failed", func_name) << std::endl;
 
         return false;
     }
@@ -37,7 +37,7 @@ bool load_function(string &func_name, map<string, CppFunction> &name_func_map) {
     char *error = nullptr;
     auto func = (CppFunction) dlsym(lib_handle, "handle");
     if ((error = dlerror()) != nullptr) {
-        std::cerr << fmt::format("Load handle function from {}.so failed: {}\n", func_name, error);
+        std::cerr << fmt::format("Load handle function from {}.so failed: {}", func_name, error) << std::endl;
         return false;
     }
     auto func_load_t = std::chrono::system_clock::now();
@@ -45,8 +45,8 @@ bool load_function(string &func_name, map<string, CppFunction> &name_func_map) {
     name_func_map[func_name] = func;
     auto lib_load_elasped = std::chrono::duration_cast<std::chrono::microseconds>(lib_load_t - start_t).count();
     auto func_load_elasped = std::chrono::duration_cast<std::chrono::microseconds>(func_load_t - lib_load_t).count();
-    std::cout << fmt::format("Loaded function {}. lib_load_elasped: {}, func_load_elasped: {}\n",
-                             func_name, lib_load_elasped, func_load_elasped);
+    std::cout << fmt::format("Loaded function {}. lib_load_elasped: {}, func_load_elasped: {}",
+                             func_name, lib_load_elasped, func_load_elasped) << std::endl;
 
     return true;
 }
@@ -69,7 +69,7 @@ void run(Address ip, unsigned thread_id) {
     string chan_name = "ipc-" + std::to_string(thread_id);
     local_chan = new shm_chan_t{chan_name.c_str(), ipc::receiver};
 
-    std::cout << "Running executor...\n";
+    std::cout << "Running executor..." << std::endl;
 
     auto report_start = std::chrono::system_clock::now();
     auto report_end = std::chrono::system_clock::now();
@@ -104,7 +104,7 @@ void run(Address ip, unsigned thread_id) {
                 if (name_func_map.find(func_name) == name_func_map.end()) {
                     // read .so from shared memory dir
                     if (!load_function(func_name, name_func_map)) {
-                        std::cerr << "Fail to execute function  due to load error" << func_name;
+                        std::cerr << "Fail to execute function  due to load error" << func_name << std::endl;
                         update_status(thread_id, false);
                         continue;
                     }
@@ -157,7 +157,7 @@ void run(Address ip, unsigned thread_id) {
                             }
                         }
                     } else {
-                        std::cerr << fmt::format("Function {} cannot parse the shared memory args\n", func_name);
+                        std::cerr << fmt::format("Function {} cannot parse the shared memory args", func_name) << std::endl;
                         update_status(thread_id, false);
                         continue;
                     }
@@ -169,8 +169,8 @@ void run(Address ip, unsigned thread_id) {
                 auto parse_time = std::chrono::duration_cast<std::chrono::microseconds>(
                         parse_stamp.time_since_epoch()).count();
 
-                std::cout << fmt::format("Executing {} arg_size: {}. recv: {}, parse: {}\n", func_name, arg_size,
-                                         recv_time, parse_time);
+                std::cout << fmt::format("Executing {} arg_size: {}. recv: {}, parse: {}", func_name, arg_size,
+                                         recv_time, parse_time) << std::endl;
 
                 int exit_signal = 1;
 
@@ -191,7 +191,7 @@ void run(Address ip, unsigned thread_id) {
                 }
 
                 if (exit_signal != 0) {
-                    std::cerr << fmt::format("Function {} exits with error {}\n", func_name, exit_signal);
+                    std::cerr << fmt::format("Function {} exits with error {}", func_name, exit_signal) << std::endl;
                 }
                 auto execute_stamp = std::chrono::system_clock::now();
                 static_cast<UserLibrary *>(user_lib)->clear_session();
@@ -200,7 +200,7 @@ void run(Address ip, unsigned thread_id) {
 
                 auto execute_time = std::chrono::duration_cast<std::chrono::microseconds>(
                         execute_stamp.time_since_epoch()).count();
-                std::cout << fmt::format("Executed {} at: {}\n", func_name, execute_time);
+                std::cout << fmt::format("Executed {} at: {}", func_name, execute_time) << std::endl;
 
             }
         }
@@ -210,8 +210,10 @@ void run(Address ip, unsigned thread_id) {
         if (duration >= ExecutorTimerThreshold) {
             report_start = std::chrono::system_clock::now();
             update_status(thread_id, false);
-            std::cout << fmt::format("Executer {} report.\n", thread_id);
+//            std::cout << fmt::format("Executer {} report.\n", thread_id);
         }
+
+//        std::cout << std::flush;
 
     }
     std::cout << __func__ << ": quit...\n";
@@ -222,7 +224,7 @@ int main(int argc, char *argv[]) {
         is_quit__.store(true, std::memory_order_release);
         shared_chan.disconnect();
         local_chan->disconnect();
-        std::cout << "Exit with env cleared\n" << std::flush;
+        std::cout << "Exit with env cleared" << std::endl;
     };
     ::signal(SIGINT, exit);
     ::signal(SIGABRT, exit);

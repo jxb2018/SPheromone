@@ -73,14 +73,14 @@ inline int get_avail_executor_num(map<uint8_t, uint8_t> &executor_status_map) {
 
 inline void send_to_executer(shm_chan_t *chan_ptr, string msg) {
     if (chan_ptr == nullptr) {
-        std::cerr << "chan_ptr = nullptr, Send to executer failed.\n";
+        std::cerr << "chan_ptr = nullptr, Send to executer failed." << std::endl;
         return;
     }
     if (!chan_ptr->send(msg)) {
-        std::cerr << "Send to executer failed.\n";
+        std::cerr << "Send to executer failed." << std::endl;
 
         if (!chan_ptr->wait_for_recv(1)) {
-            std::cerr << "Wait receiver failed.\n";
+            std::cerr << "Wait receiver failed." << std::endl;
         }
     }
 }
@@ -179,9 +179,9 @@ void schedule_func_call(CommHelperInterface *helper, map<uint8_t, uint8_t> &exec
         auto sched_time = std::chrono::system_clock::now();
         auto sched_stamp = std::chrono::duration_cast<std::chrono::microseconds>(sched_time.time_since_epoch()).count();
 
-        std::cout << "Schedule function " << func_name << " to executor " << executor_id << "\n";
-//        log->info("Schedule function {} with arg_flag {} to executor {}. sched_time: {}", func_name, arg_flag,
-//                  executor_id, sched_stamp);
+        std::cout << fmt::format("Schedule function {} with arg_flag {} to executor {}. sched_time: {}", func_name,
+                                 arg_flag,
+                                 executor_id, sched_stamp) << std::endl;
         send_to_executer(executor_chans_map[executor_id], resp);
         executor_status_map[executor_id] = 2;
 
@@ -278,7 +278,7 @@ void run(CommHelperInterface *helper, Address ip, unsigned thread_id, unsigned e
 
     map<Bucket, vector<TriggerPointer>> bucket_triggers_map;
 
-    std::cout << "Running kvs server...\n";
+    std::cout << "Running kvs server..." << std::endl;
 //    log->info("Running kvs server");
 
     auto report_start = std::chrono::system_clock::now();
@@ -353,8 +353,8 @@ void run(CommHelperInterface *helper, Address ip, unsigned thread_id, unsigned e
                 split(params, '|', infos);
 
                 if (infos.size() < 6) {
-                    std::cerr << fmt::format("Send object handler has no enough argument {} params {}\n", infos.size(),
-                                             params);
+                    std::cerr << fmt::format("Send object handler has no enough argument {} params {}", infos.size(),
+                                             params) << std::endl;
                 } else {
                     // unpacking infos
                     string &session_id = infos[0], src_function = infos[1], tgt_function = infos[2], bucket = infos[3], session_key = infos[4];
@@ -416,9 +416,9 @@ void run(CommHelperInterface *helper, Address ip, unsigned thread_id, unsigned e
                                 schedule_func_call(helper, executor_status_map, function_executor_map, session_id,
                                                    app_name, tgt_function, func_args, arg_flag);
                             } else {
-                                std::cerr << fmt::format("Direct Invocation without pre-defined dependency {} -> {}\n",
+                                std::cerr << fmt::format("Direct Invocation without pre-defined dependency {} -> {}",
                                                          src_function,
-                                                         tgt_function);
+                                                         tgt_function) << std::endl;
                             }
                         }
                             // try trigger check
@@ -521,7 +521,7 @@ void run(CommHelperInterface *helper, Address ip, unsigned thread_id, unsigned e
                         }
                         auto check_name = std::chrono::duration_cast<std::chrono::microseconds>(
                                 std::chrono::system_clock::now().time_since_epoch()).count();
-                        std::cout << fmt::format("Check and fetch function args at: {}\n", check_name);
+                        std::cout << fmt::format("Check and fetch function args at: {}", check_name) << std::endl;
                         // If all the args can be found locally, we just schedule this call
                         if (inflight_args.inflight_args_.empty()) {
                             vector<string> func_full_args;
@@ -557,8 +557,8 @@ void run(CommHelperInterface *helper, Address ip, unsigned thread_id, unsigned e
                         auto cur_stamp = std::chrono::duration_cast<std::chrono::microseconds>(
                                 std::chrono::system_clock::now().time_since_epoch()).count();
                         std::cout
-                                << fmt::format("Get remote {}, recv: {}, ready: {}\n", comm_resp.data_key_, recv_stamp,
-                                               cur_stamp);
+                                << fmt::format("Get remote {}, recv: {}, ready: {}", comm_resp.data_key_, recv_stamp,
+                                               cur_stamp) << std::endl;
                         send_to_executer(executor_chans_map[inflight_get_req.executor_id_], resp);
                     }
                     key_remote_get_map.erase(comm_resp.data_key_);
@@ -603,8 +603,8 @@ void run(CommHelperInterface *helper, Address ip, unsigned thread_id, unsigned e
                                 inflight_get_req.recv_time_.time_since_epoch()).count();
                         auto cur_stamp = std::chrono::duration_cast<std::chrono::microseconds>(
                                 std::chrono::system_clock::now().time_since_epoch()).count();
-                        std::cout << fmt::format("Kvs GET {}, recv: {}, ready: {}\n", comm_resp.data_key_, recv_stamp,
-                                                 cur_stamp);
+                        std::cout << fmt::format("Kvs GET {}, recv: {}, ready: {}", comm_resp.data_key_, recv_stamp,
+                                                 cur_stamp) << std::endl;
                         send_to_executer(executor_chans_map[inflight_get_req.executor_id_], resp);
                     }
                     key_remote_get_map.erase(local_obj_name);
@@ -621,8 +621,8 @@ void run(CommHelperInterface *helper, Address ip, unsigned thread_id, unsigned e
                                 inflight_put_req.recv_time_.time_since_epoch()).count();
                         auto cur_stamp = std::chrono::duration_cast<std::chrono::microseconds>(
                                 std::chrono::system_clock::now().time_since_epoch()).count();
-                        std::cerr << fmt::format("Kvs PUT {}, recv: {}, ready: {}\n", comm_resp.data_key_, recv_stamp,
-                                                 cur_stamp);
+                        std::cerr << fmt::format("Kvs PUT {}, recv: {}, ready: {}", comm_resp.data_key_, recv_stamp,
+                                                 cur_stamp) << std::endl;
                         send_to_executer(executor_chans_map[inflight_put_req.executor_id_], resp);
                     }
                     key_ksv_put_map.erase(comm_resp.data_key_);
@@ -684,8 +684,10 @@ void run(CommHelperInterface *helper, Address ip, unsigned thread_id, unsigned e
 
             report_start = std::chrono::system_clock::now();
         }
+
+//        std::cout << std::flush;
     }
-    std::cout << __func__ << ": quit...\n";
+    std::cout << __func__ << ": quit..." << std::endl;
 }
 
 int main(int argc, char *argv[]) {
@@ -695,7 +697,7 @@ int main(int argc, char *argv[]) {
         for (auto &chan_pair: executor_chans_map) {
             chan_pair.second->disconnect();
         }
-        std::cout << "Exit with env cleared\n" << std::flush;
+        std::cout << "Exit with env cleared" << std::endl;
     };
     ::signal(SIGINT, exit);
     ::signal(SIGABRT, exit);

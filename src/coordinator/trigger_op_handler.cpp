@@ -30,10 +30,10 @@ void trigger_op_handler(string &serialized, string &private_ip, unsigned &thread
                 bucket_triggers_map[bucket_name].push_back(trigger_ptr);
             } else {
                 std::cout << fmt::format("Unknown primitive type when adding Trigger {} in Bucket {}.", trigger_name,
-                                         bucket_name);
+                                         bucket_name) << std::endl;
             }
             response.set_error(KVSError::SUCCESS);
-            std::cout << fmt::format("Add Trigger {} in Bucket {}.", trigger_name, bucket_name);
+            std::cout << fmt::format("Add Trigger {} in Bucket {}.", trigger_name, bucket_name) << std::endl;
 
             trigger_msg.set_msg_type(0);
 
@@ -71,10 +71,10 @@ void trigger_op_handler(string &serialized, string &private_ip, unsigned &thread
                 entity->set_trigger_name(trigger_name);
 
                 response.set_error(KVSError::SUCCESS);
-                std::cout << fmt::format("Delete Trigger {} in Bucket {}.", trigger_name, bucket_name);
+                std::cout << fmt::format("Delete Trigger {} in Bucket {}.", trigger_name, bucket_name) << std::endl;
             } else {
                 std::cout << fmt::format("Trigger is not found when deleting Trigger {} in Bucket {}.", trigger_name,
-                                         bucket_name);
+                                         bucket_name) << std::endl;
             }
         } else {
             response.set_error(KVSError::BUCKET_NE);
@@ -82,7 +82,7 @@ void trigger_op_handler(string &serialized, string &private_ip, unsigned &thread
     }
         // unknow type
     else {
-        std::cerr << fmt::format("Unknown operation type for Trigger {} in Bucket {}.", trigger_name, bucket_name);
+        std::cerr << fmt::format("Unknown operation type for Trigger {} in Bucket {}.", trigger_name, bucket_name) << std::endl;
     }
 
     string resp_serialized;

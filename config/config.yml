@@ -13,13 +13,7 @@ coordinator:
     public: 127.0.0.1
   delay: 0
 
-# For Executor
-executor:
-  func_dir: /tmp/shm/
-  wait: 0
-  ip: 127.0.0.1
-  thread_id: 0
-
+# For scheduler
 scheduler:
   threads:
     coord: 1
@@ -34,3 +28,10 @@ scheduler:
     routing-elb: 127.0.0.1
     coord:
       - 127.0.0.1
+
+# For Executor
+executor:
+  func_dir: /tmp/shm/
+  wait: 0
+  ip: 127.0.0.1
+  thread_id: 0

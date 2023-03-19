@@ -47,11 +47,11 @@ void run(Address ip) {
     // socket for global scheduler
     zmq::socket_t coord_sync_socket(context, ZMQ_PULL);
     coord_sync_socket.bind(kBindBase + std::to_string(coordSyncPort));
-    std::cout << "coord sync socket binded\n";
+    std::cout << "coord sync socket binded" << std::endl;
 
     zmq::socket_t coord_query_socket(context, ZMQ_REP);
     coord_query_socket.bind(kBindBase + std::to_string(coordQueryPort));
-    std::cout << "coord query socket binded\n";
+    std::cout << "coord query socket binded" << std::endl;
 
     vector<zmq::pollitem_t> pollitems = {
             {static_cast<void *>(coord_sync_socket),  0, ZMQ_POLLIN, 0},
@@ -71,8 +71,9 @@ void run(Address ip) {
             msg.ParseFromString(serialized);
             CoordIp coord_ip(msg.public_ip(), msg.private_ip(), msg.thread_id());
             coord_ips.insert(coord_ip);
-            std::cout<< fmt::format("Coord Sync. public_ip: {}, private_ip: {}, thread_id: {}\n", msg.public_ip(), msg.private_ip(),
-                      msg.thread_id());
+            std::cout << fmt::format("Coord Sync. public_ip: {}, private_ip: {}, thread_id: {}\n", msg.public_ip(),
+                                     msg.private_ip(),
+                                     msg.thread_id());
 
         }
 
@@ -98,10 +99,10 @@ void run(Address ip) {
             string resp_serialized;
             resp.SerializeToString(&resp_serialized);
             kZmqUtil->send_string(resp_serialized, &coord_query_socket);
-            std::cout << fmt::format("Coord Query. app_name: {}\n", app_name);
+            std::cout << fmt::format("Coord Query app_name: {}\n", app_name);
 
         }
-
+        std::cout << std::flush;
     }
 }
 

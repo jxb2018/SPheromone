@@ -2,6 +2,7 @@
 #define INCLUDE_CPP_FUNCTION_HPP_
 
 #include <string>
+
 using string = std::string;
 
 class EpheObject {

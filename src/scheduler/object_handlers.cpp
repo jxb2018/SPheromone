@@ -28,7 +28,7 @@ vector<TriggerPointer>> &bucket_triggers_map, vector<string> &active_triggers,
         auto actions = trigger->action_for_new_object(bucket_key);
         int arg_flag = trigger->get_trigger_option() + 1;
         if (actions.size() > 0) {
-            std::cout << fmt::format("Trigger function {} after BucketKey {} {} prepared\n", actions[0].function_, bucket_key.bucket_, bucket_key.key_);
+            std::cout << fmt::format("Trigger function {} after BucketKey {} {} prepared", actions[0].function_, bucket_key.bucket_, bucket_key.key_) << std::endl;
             active_triggers.push_back(trigger->get_trigger_name());
 
             for (auto &action : actions){

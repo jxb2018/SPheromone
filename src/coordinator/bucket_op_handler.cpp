@@ -24,7 +24,7 @@ void bucket_op_handler(string &serialized, SocketCache &pushers,
             bucket_app_map[bucket_name] = app_name;
             response.set_error(KVSError::SUCCESS);
             //log->info("Create Bucket {}.", bucket_name);
-            std::cout << "Create Bucket " << bucket_name << ".\n";
+            std::cout << "Create Bucket " << bucket_name << std::endl;
         }
     } else if (request.operation_type() == BucketOperationType::DELETE_BUCKET) {
         // it means the bucket does not exist, so we return the error
@@ -38,12 +38,12 @@ void bucket_op_handler(string &serialized, SocketCache &pushers,
                 bucket_triggers_map.erase(bucket_name);
             }
             response.set_error(KVSError::SUCCESS);
-            std::cout << fmt::format("Delete Bucket {}.", bucket_name);
+            std::cout << fmt::format("Delete Bucket {}.", bucket_name) << std::endl;
         }
     }
         // unknow type
     else {
-        std::cerr << fmt::format("Unknown operation type for Bucket {}.", bucket_name);
+        std::cerr << fmt::format("Unknown operation type for Bucket {}.", bucket_name) << std::endl;
     }
 
     string resp_serialized;

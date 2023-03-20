@@ -13,14 +13,17 @@ int main() {
     funcs.push_back("exp01_frontend");
 
     std::vector<std::string> args;
-    args.push_back("1"); // function chain length
+    args.push_back("4"); // function chain length
     args.push_back("16B"); // payload size
 
     std::map<std::string, std::string> primitive;
     primitive["function"] = "exp01_backend";
 
+    std::string bucket_name("b_exp01_backend");
+
     client.register_app(app_name, funcs);
-    client.add_trigger(app_name, "b_exp01_backend", "trigger1", IMMEDIATE, primitive, 0);
+    client.create_bucket(app_name, bucket_name);
+    client.add_trigger(app_name, bucket_name, "trigger1", IMMEDIATE, primitive, 0);
     client.call_app(app_name, "exp01_frontend", args);
 
     std::cout << "finished!" << std::endl;

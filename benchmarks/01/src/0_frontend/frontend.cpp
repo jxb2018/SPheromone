@@ -42,10 +42,11 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
     will_generate_payload_size = will_generate_payload_size < sizeof(int) ? sizeof(int) : will_generate_payload_size;
 
     auto object = library->create_object("exp01_backend", true, will_generate_payload_size);
-    auto out_ptr = reinterpret_cast<int *>(object->get_value());
+    auto out_ptr = reinterpret_cast<char *>(object->get_value());
 
     // set function chain
-    *out_ptr = chain_length;
+    strcpy(out_ptr, std::to_string(chain_length).c_str());
+    std::cout << "chain_length: " << chain_length << ", generated_payload_size: " << will_generate_payload_size << std::endl;
 
     // step3: invoke downstream via interface
     auto start_time = exp01::get_timestamp_us();

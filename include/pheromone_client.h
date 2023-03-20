@@ -34,23 +34,23 @@ using vector = std::vector<T>;
 
 class OperationRequestThread {
 public:
-    OperationRequestThread(std::string_view ip_addr, int thread_id) :
+    OperationRequestThread(std::string ip_addr, int thread_id) :
             ip_addr_(ip_addr), thread_id_(thread_id) {};
 
-    std::string bucket_req_connect_addr(){
+    std::string bucket_req_connect_addr() {
         return "tcp://" + ip_addr_ + ":" + std::to_string(BUCKET_REQ_PORT + thread_id_);
     }
 
-    std::string bucket_req_bind_address(){
-        return "tcp:://*:" + std::to_string(BUCKET_REQ_PORT + thread_id_);
+    std::string bucket_req_bind_address() {
+        return "tcp://*:" + std::to_string(BUCKET_REQ_PORT + thread_id_);
     }
 
-    std::string trigger_req_connect_addr(){
+    std::string trigger_req_connect_addr() {
         return "tcp://" + ip_addr_ + ":" + std::to_string(TRIGGER_REQ_PORT + thread_id_);
     }
 
-    std::string trigger_req_bind_address(){
-        return "tcp:://*:" + std::to_string(TRIGGER_REQ_PORT + thread_id_);
+    std::string trigger_req_bind_address() {
+        return "tcp://*:" + std::to_string(TRIGGER_REQ_PORT + thread_id_);
     }
 
 private:
@@ -66,6 +66,13 @@ public:
     ~PheromoneClient() {
         manager_socket_->close();
         delete manager_socket_;
+
+        bucket_op_puller_->close();
+        delete bucket_op_puller_;
+
+        trigger_op_puller_->close();
+        delete trigger_op_puller_;
+
         delete pushers_;
         delete context_;
         delete kZmqUtil_;
@@ -101,9 +108,13 @@ private:
 
     zmq::socket_t *manager_socket_;
 
+    zmq::socket_t *bucket_op_puller_;
+
+    zmq::socket_t *trigger_op_puller_;
+
     std::pair<std::string, unsigned> get_coord(std::string app_name);
 
-    std::string get_request_id(){
+    std::string get_request_id() {
         return std::to_string(req_id++);
     }
 
@@ -114,14 +125,18 @@ PheromoneClient::PheromoneClient(std::string manager_ip, int thread_id) {
     thread_id_ = thread_id;
 
     req_id = 0;
-    ort_ = new OperationRequestThread(manager_ip, thread_id);
+    ort_ = new OperationRequestThread(manager_ip_, thread_id);
 
     kZmqUtil_ = new ZmqUtil();
     context_ = new zmq::context_t(1);
     pushers_ = new SocketCache(context_, ZMQ_PUSH);
     manager_socket_ = new zmq::socket_t(*context_, ZMQ_REQ);
+    bucket_op_puller_ = new zmq::socket_t(*context_, ZMQ_PULL);
+    trigger_op_puller_ = new zmq::socket_t(*context_, ZMQ_PULL);
 
     manager_socket_->connect("tcp://" + manager_ip_ + ":" + std::to_string(6002));
+    bucket_op_puller_->bind(ort_->bucket_req_bind_address());
+    trigger_op_puller_->bind(ort_->trigger_req_bind_address());
 }
 
 void PheromoneClient::register_app(std::string app_name, std::vector<std::string> funcs) {
@@ -215,9 +230,15 @@ void PheromoneClient::add_trigger(std::string app_name, std::string bucket_name,
     kZmqUtil_->send_string(serialized, socket);
 
     // step3: receive
-//    auto response = kZmqUtil_->recv_string(socket);
+    auto serialized_resp = kZmqUtil_->recv_string(trigger_op_puller_);
+    TriggerOperationResponse resp;
+    resp.ParseFromString(serialized_resp);
 
-//    std::cout << response << std::endl;
+    if (resp.error() == 0) {
+        std::cout << fmt::format("Successfully creating trigger {}", trigger_name) << std::endl;
+    } else {
+        std::cerr << fmt::format("Failed to create trigger {}", trigger_name) << std::endl;
+    }
 }
 
 void PheromoneClient::create_bucket(std::string app_name, std::string bucket_name) {
@@ -238,6 +259,17 @@ void PheromoneClient::create_bucket(std::string app_name, std::string bucket_nam
     auto socket = &(pushers_->At("tcp://" + coord_thread.first + ":" +
                                  std::to_string(coord_thread.second + BUCKET_OP_PORT)));
     kZmqUtil_->send_string(serialized, socket);
+
+    // step3: recv
+    auto serialized_resp = kZmqUtil_->recv_string(bucket_op_puller_);
+    BucketOperationResponse resp;
+    resp.ParseFromString(serialized_resp);
+
+    if (resp.error() == 0) {
+        std::cout << fmt::format("Successfully creating bucket {}", bucket_name) << std::endl;
+    } else {
+        std::cerr << fmt::format("Failed to create bucket {}", bucket_name) << std::endl;
+    }
 
 }
 

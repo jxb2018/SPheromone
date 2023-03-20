@@ -13,4 +13,4 @@ export CONFIG_FILE=/home/lgw/SPheromone/config/config.yml
 
 /tmp/SPheromone/scheduler/scheduler 1>${log_dir}/scheduler.log 2>&1 &
 
-#/tmp/SPheromone/executor/executor 1>${log_dir}/executor.log 2>&1 &
+/tmp/SPheromone/executor/executor 1>${log_dir}/executor.log 2>&1 &

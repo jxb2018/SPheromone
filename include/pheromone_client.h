@@ -27,6 +27,38 @@
 template<class T>
 using vector = std::vector<T>;
 
+#define BUCKET_REQ_PORT 12070
+#define BUCKET_OP_PORT  7800
+#define TRIGGER_REQ_PORT 12170
+#define TRIGGER_OP_PORT 7900
+
+class OperationRequestThread {
+public:
+    OperationRequestThread(std::string_view ip_addr, int thread_id) :
+            ip_addr_(ip_addr), thread_id_(thread_id) {};
+
+    std::string bucket_req_connect_addr(){
+        return "tcp://" + ip_addr_ + ":" + std::to_string(BUCKET_REQ_PORT + thread_id_);
+    }
+
+    std::string bucket_req_bind_address(){
+        return "tcp:://*:" + std::to_string(BUCKET_REQ_PORT + thread_id_);
+    }
+
+    std::string trigger_req_connect_addr(){
+        return "tcp://" + ip_addr_ + ":" + std::to_string(TRIGGER_REQ_PORT + thread_id_);
+    }
+
+    std::string trigger_req_bind_address(){
+        return "tcp:://*:" + std::to_string(TRIGGER_REQ_PORT + thread_id_);
+    }
+
+private:
+    std::string ip_addr_;
+    int thread_id_;
+};
+
+
 class PheromoneClient {
 public:
     explicit PheromoneClient(std::string manager_ip, int thread_id = 0);
@@ -37,13 +69,16 @@ public:
         delete pushers_;
         delete context_;
         delete kZmqUtil_;
+        delete ort_;
     }
 
     void register_app(std::string app_name, std::vector<std::string> funcs);
 
+    void create_bucket(std::string app_name, std::string bucket_name);
+
     void
     add_trigger(std::string app_name, std::string bucket_name, std::string trigger_name, PrimitiveType primitive_type,
-                std::string primitive, int trigger_option, std::vector<std::pair<std::string, std::string>> hints);
+                std::map<std::string, std::string> primitive, int trigger_option);
 
     void call_app(std::string app_name, std::string func_name, std::vector<std::string>);
 
@@ -51,6 +86,10 @@ private:
     std::string manager_ip_;
 
     int thread_id_;
+
+    int req_id;
+
+    OperationRequestThread *ort_;
 
     ZmqUtilInterface *kZmqUtil_;
 
@@ -64,11 +103,18 @@ private:
 
     std::pair<std::string, unsigned> get_coord(std::string app_name);
 
+    std::string get_request_id(){
+        return std::to_string(req_id++);
+    }
+
 };
 
 PheromoneClient::PheromoneClient(std::string manager_ip, int thread_id) {
     manager_ip_ = std::move(manager_ip);
     thread_id_ = thread_id;
+
+    req_id = 0;
+    ort_ = new OperationRequestThread(manager_ip, thread_id);
 
     kZmqUtil_ = new ZmqUtil();
     context_ = new zmq::context_t(1);
@@ -88,7 +134,6 @@ void PheromoneClient::register_app(std::string app_name, std::vector<std::string
 
     std::string serialized;
     msg.SerializeToString(&serialized);
-
 
     auto socket = &(pushers_->At("tcp://" + coord_thread.first + ":" +
                                  std::to_string(coord_thread.second + 5020)));
@@ -137,11 +182,62 @@ void PheromoneClient::call_app(std::string app_name, std::string func_name, std:
 }
 
 void PheromoneClient::add_trigger(std::string app_name, std::string bucket_name, std::string trigger_name,
-                                  PrimitiveType primitive_type, std::string primitive, int trigger_option,
-                                  std::vector<std::pair<std::string, std::string>> hints) {
+                                  PrimitiveType primitive_type, std::map<std::string, std::string> primitive,
+                                  int trigger_option) {
     auto coord_thread = get_coord(app_name);
 
+    // step1: prepare
     TriggerOperationRequest req;
+
+    req.set_operation_type(ADD_TRIGGER);
+    req.set_request_id(get_request_id());
+    req.set_response_address(ort_->trigger_req_connect_addr());
+    req.set_app_name(app_name);
+    req.set_bucket_name(bucket_name);
+    req.set_trigger_name(trigger_name);
+    req.set_primitive_type(primitive_type);
+    req.set_trigger_option(trigger_option);
+
+    std::string prm_serialized;
+    if (primitive_type == IMMEDIATE) {
+        auto prm = ImmediatePrimitive();
+        prm.set_function(primitive["function"]);
+        prm.SerializeToString(&prm_serialized);
+    }
+    req.set_primitive(prm_serialized);
+
+    // step2: send
+    std::string serialized;
+    req.SerializeToString(&serialized);
+
+    auto socket = &(pushers_->At("tcp://" + coord_thread.first + ":" +
+                                 std::to_string(coord_thread.second + TRIGGER_OP_PORT)));
+    kZmqUtil_->send_string(serialized, socket);
+
+    // step3: receive
+//    auto response = kZmqUtil_->recv_string(socket);
+
+//    std::cout << response << std::endl;
+}
+
+void PheromoneClient::create_bucket(std::string app_name, std::string bucket_name) {
+    auto coord_thread = get_coord(app_name);
+
+    // step1: prepare
+    auto req = BucketOperationRequest();
+    req.set_operation_type(CREATE_BUCKET);
+    req.set_request_id(get_request_id());
+    req.set_response_address(ort_->bucket_req_connect_addr());
+    req.set_app_name(app_name);
+    req.set_bucket_name(bucket_name);
+
+    // step2: send
+    std::string serialized;
+    req.SerializeToString(&serialized);
+
+    auto socket = &(pushers_->At("tcp://" + coord_thread.first + ":" +
+                                 std::to_string(coord_thread.second + BUCKET_OP_PORT)));
+    kZmqUtil_->send_string(serialized, socket);
 
 }
 

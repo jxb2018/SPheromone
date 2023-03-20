@@ -16,7 +16,11 @@ int main() {
     args.push_back("1"); // function chain length
     args.push_back("16B"); // payload size
 
+    std::map<std::string, std::string> primitive;
+    primitive["function"] = "exp01_backend";
+
     client.register_app(app_name, funcs);
+    client.add_trigger(app_name, "b_exp01_backend", "trigger1", IMMEDIATE, primitive, 0);
     client.call_app(app_name, "exp01_frontend", args);
 
     std::cout << "finished!" << std::endl;

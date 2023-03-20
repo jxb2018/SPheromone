@@ -8,6 +8,8 @@
 #include "op_threads.hpp"
 #include "trigger.hpp"
 #include "operation.pb.h"
+#include "fmt/format.h"
+#include <thread>
 
 struct NodeStatus {
     TimePoint tp_;

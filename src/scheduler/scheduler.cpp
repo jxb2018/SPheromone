@@ -433,7 +433,7 @@ void run(CommHelperInterface *helper, Address ip, unsigned thread_id, unsigned e
                             } else if (is_data_packing == 2) {
                                 helper->notify_put(bucket_key, active_triggers, session_client_addr_map[session_id]);
                             }
-                            std::cerr << fmt::format("Notified data {}", obj_name);
+                            std::cout << fmt::format("Notified data {}", obj_name) << std::endl;
                             call_id += active_triggers.size();
                         }
                     }

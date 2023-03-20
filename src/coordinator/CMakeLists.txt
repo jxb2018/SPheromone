@@ -14,4 +14,4 @@ SET(COORDINATOR_SOURCE
         ${BASE_DIR}/src-gen/anna.pb.cc)
 
 ADD_EXECUTABLE(coordinator ${COORDINATOR_SOURCE})
-TARGET_LINK_LIBRARIES(coordinator libzmq cppzmq spdlog shm-ipc rt fmt yaml-cpp dl ${Protobuf_LIBRARIES})
+TARGET_LINK_LIBRARIES(coordinator libzmq cppzmq shm-ipc rt fmt yaml-cpp dl ${Protobuf_LIBRARIES})

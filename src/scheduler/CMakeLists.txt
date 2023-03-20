@@ -9,4 +9,4 @@ SET(SCHEDULER_SOURCE
         ${BASE_DIR}/src-gen/anna.pb.cc)
 
 ADD_EXECUTABLE(scheduler ${SCHEDULER_SOURCE})
-TARGET_LINK_LIBRARIES(scheduler libzmq cppzmq spdlog shm-ipc rt fmt yaml-cpp dl ${Protobuf_LIBRARIES})
+TARGET_LINK_LIBRARIES(scheduler libzmq cppzmq shm-ipc rt fmt yaml-cpp dl ${Protobuf_LIBRARIES})

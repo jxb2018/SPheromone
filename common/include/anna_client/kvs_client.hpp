@@ -20,6 +20,7 @@
 #include "types.hpp"
 #include "common.hpp"
 #include "anna_threads.hpp"
+#include "fmt/format.h"
 
 
 using TimePoint = std::chrono::time_point<std::chrono::system_clock>;
@@ -128,8 +129,8 @@ public:
 
             if (pending_request_map_.find(key) != pending_request_map_.end()) {
                 if (response.error() == AnnaError::NO_SERVERS) {
-                    log_->error(
-                            "No servers have joined the cluster yet. Retrying request.");
+                    std::cerr << fmt::format(
+                            "No servers have joined the cluster yet. Retrying request.") << std::endl;
                     pending_request_map_[key].first = std::chrono::system_clock::now();
 
                     query_routing_async(key);
@@ -261,7 +262,7 @@ public:
     /**
      * Set the logger used by the client.
      */
-    void set_logger(logger log) { log_ = log; }
+//    void set_logger(logger log) { log_ = log; }
 
     /**
      * Clears the key address cache held by this client.
@@ -336,10 +337,10 @@ private:
     bool check_tuple(const KeyTuple &tuple) {
         Key key = tuple.key();
         if (tuple.error() == 2) {
-            log_->info(
+            std::cout << fmt::format(
                     "Server ordered invalidation of key address cache for key {}. "
                     "Retrying request.",
-                    key);
+                    key) << std::endl;
 
             invalidate_cache_for_key(key, tuple);
             return true;
@@ -348,8 +349,8 @@ private:
         if (tuple.invalidate()) {
             invalidate_cache_for_key(key, tuple);
 
-            log_->info("Server ordered invalidation of key address cache for key {}",
-                       key);
+            std::cout << fmt::format("Server ordered invalidation of key address cache for key {}",
+                       key) << std::endl;
         }
 
         return false;
@@ -523,7 +524,7 @@ private:
     map<Key, set<Address>> key_address_cache_;
 
     // class logger
-    logger log_;
+//    logger log_;
 
     // GC timeout
     unsigned timeout_;

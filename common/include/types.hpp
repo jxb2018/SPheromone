@@ -6,7 +6,6 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
-#include "spdlog/spdlog.h"
 #include <queue>
 
 using string = std::string;
@@ -41,7 +40,5 @@ using Bucket = std::string;
 using Session = std::string;
 
 using Value = std::string;
-
-using logger = std::shared_ptr<spdlog::logger>;
 
 #endif  // INCLUDE_TYPES_HPP_

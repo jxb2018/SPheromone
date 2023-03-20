@@ -14,7 +14,7 @@ include_directories(src-gen/)
 
 # deps
 add_subdirectory(deps/shm-ipc shm-ipc)
-add_subdirectory(deps/spdlog spdlog)
+#add_subdirectory(deps/spdlog spdlog)
 add_subdirectory(deps/yaml-cpp yaml-cpp)
 add_subdirectory(deps/zeromq zeromq)
 add_subdirectory(deps/fmt fmt)

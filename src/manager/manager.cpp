@@ -71,9 +71,9 @@ void run(Address ip) {
             msg.ParseFromString(serialized);
             CoordIp coord_ip(msg.public_ip(), msg.private_ip(), msg.thread_id());
             coord_ips.insert(coord_ip);
-            std::cout << fmt::format("Coord Sync. public_ip: {}, private_ip: {}, thread_id: {}\n", msg.public_ip(),
+            std::cout << fmt::format("Coord Sync. public_ip: {}, private_ip: {}, thread_id: {}", msg.public_ip(),
                                      msg.private_ip(),
-                                     msg.thread_id());
+                                     msg.thread_id()) << std::endl;
 
         }
 
@@ -99,7 +99,7 @@ void run(Address ip) {
             string resp_serialized;
             resp.SerializeToString(&resp_serialized);
             kZmqUtil->send_string(resp_serialized, &coord_query_socket);
-            std::cout << fmt::format("Coord Query app_name: {}\n", app_name);
+            std::cout << fmt::format("Coord Query app_name: {}", app_name) << std::endl;
 
         }
 //        std::cout << std::flush;

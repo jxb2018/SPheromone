@@ -5,8 +5,8 @@ manager:
 
 # For Coordinator
 coordinator:
-  coord_threads: 1
-  io_threads: 1
+  coord_threads: 4
+  io_threads: 2
   manager: 127.0.0.1
   ip:
     private: 127.0.0.1
@@ -16,8 +16,8 @@ coordinator:
 # For scheduler
 scheduler:
   threads:
-    coord: 1
-    io: 1
+    coord: 4
+    io: 2
   func_dir: /tmp/shm/
   delay: 0
   shared: 1

@@ -22,13 +22,14 @@
 #include "trigger.hpp"
 #include "yaml-cpp/yaml.h"
 #include "zmq/zmq_util.hpp"
+#include "fmt/format.h"
 
 template<class T>
 using vector = std::vector<T>;
 
 class PheromoneClient {
 public:
-    explicit PheromoneClient(std::string manager_ip);
+    explicit PheromoneClient(std::string manager_ip, int thread_id = 0);
 
     ~PheromoneClient() {
         manager_socket_->close();
@@ -40,10 +41,16 @@ public:
 
     void register_app(std::string app_name, std::vector<std::string> funcs);
 
-    void call_app(std::string app_name, std::string func_name, std::string args);
+    void
+    add_trigger(std::string app_name, std::string bucket_name, std::string trigger_name, PrimitiveType primitive_type,
+                std::string primitive, int trigger_option, std::vector<std::pair<std::string, std::string>> hints);
+
+    void call_app(std::string app_name, std::string func_name, std::vector<std::string>);
 
 private:
     std::string manager_ip_;
+
+    int thread_id_;
 
     ZmqUtilInterface *kZmqUtil_;
 
@@ -56,10 +63,12 @@ private:
     zmq::socket_t *manager_socket_;
 
     std::pair<std::string, unsigned> get_coord(std::string app_name);
+
 };
 
-PheromoneClient::PheromoneClient(std::string manager_ip) {
+PheromoneClient::PheromoneClient(std::string manager_ip, int thread_id) {
     manager_ip_ = std::move(manager_ip);
+    thread_id_ = thread_id;
 
     kZmqUtil_ = new ZmqUtil();
     context_ = new zmq::context_t(1);
@@ -106,17 +115,18 @@ std::pair<std::string, unsigned> PheromoneClient::get_coord(string app_name) {
     return app_coord_map_[app_name];
 }
 
-void PheromoneClient::call_app(std::string app_name, std::string func_name, std::string args) {
+void PheromoneClient::call_app(std::string app_name, std::string func_name, std::vector<std::string> args) {
     auto coord_thread = get_coord(app_name);
 
     FunctionCall call;
     call.set_app_name(app_name);
     auto req = call.add_requests();
     req->set_name(func_name);
-    auto arg = req->add_arguments();
-    arg->set_body(args);
-    arg->set_arg_flag(0);
-
+    for (auto &argument: args) {
+        auto arg = req->add_arguments();
+        arg->set_body(argument);
+        arg->set_arg_flag(0);
+    }
     std::string serialized;
     call.SerializeToString(&serialized);
 
@@ -124,6 +134,15 @@ void PheromoneClient::call_app(std::string app_name, std::string func_name, std:
                                  std::to_string(coord_thread.second + 5050)));
 
     kZmqUtil_->send_string(serialized, socket);
+}
+
+void PheromoneClient::add_trigger(std::string app_name, std::string bucket_name, std::string trigger_name,
+                                  PrimitiveType primitive_type, std::string primitive, int trigger_option,
+                                  std::vector<std::pair<std::string, std::string>> hints) {
+    auto coord_thread = get_coord(app_name);
+
+    TriggerOperationRequest req;
+
 }
 
 #endif //SPHEROMONE_PHEROMONE_CLIENT_H

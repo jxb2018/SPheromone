@@ -12,7 +12,7 @@
 #include <mutex>
 #include <condition_variable>
 #include "safe_ptr.hpp"
-
+#include "fmt/format.h"
 
 enum RecvMsgType {
     Null, Call, DataResp, KvsGetResp, KvsPutResp
@@ -105,7 +105,7 @@ public:
     virtual void notify_put(const BucketKey &bucket_key, vector<string> &active_triggers, const string &resp_address,
                             const string &payload = emptyString) = 0;
 
-    virtual void set_logger(logger log) = 0;
+//    virtual void set_logger(logger log) = 0;
 
     virtual void update_status(int avail_executors, set<string> &function_cache) = 0;
 
@@ -562,7 +562,7 @@ public:
     /**
      * Set the logger used by the client.
      */
-    void set_logger(logger log) {}
+//    void set_logger(logger log) {}
 
     /**
      * Clears the key address cache held by this client.
@@ -728,7 +728,7 @@ private:
         Address notif_thread = get_notifying_thread(bucket_key.bucket_);
 
         if (notif_thread.empty()) {
-            std::cout << fmt::format("No coordinator thread found when sync on bucket {}", bucket_key.bucket_)
+            std::cerr << fmt::format("No coordinator thread found when sync on bucket {}", bucket_key.bucket_)
                       << std::endl;
             return;
         }

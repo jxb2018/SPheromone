@@ -14,7 +14,8 @@ sudo apt-get install libprotobuf-dev protobuf-compiler
 
 ## Run
 
-set env `CONFIG_FILE`
+- First, build shared library, like `exp01_frontend`
+- Second, run `manager`,`coordinator`,`scheduler`,`executor` with env `CONFIG_FILE`
 
 ## Benchmarks
 

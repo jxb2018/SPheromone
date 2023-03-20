@@ -13,6 +13,7 @@
 #include "libipc/shm.h"
 #include "common.hpp"
 #include "trigger.hpp"
+#include "fmt/format.h"
 
 void copy_to_shm_obj(string &key_name, const char *data_src, unsigned data_size);
 

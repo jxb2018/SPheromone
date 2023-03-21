@@ -52,6 +52,9 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
     auto start_time = exp01::get_timestamp_us();
     library->send_object(object);
 
+    // test cross-node
+//    sleep(2);
+
     std::cout << "start_time: " << start_time << std::endl;
 
     return 0;

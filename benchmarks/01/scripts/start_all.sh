@@ -5,7 +5,7 @@ log_dir=/tmp/sp01
 rm -rf ${log_dir}
 mkdir ${log_dir}
 
-export CONFIG_FILE=/home/lgw/SPheromone/config/config.yml
+export CONFIG_FILE=/home/lgw/SPheromone/config/single_node/config.yml
 
 /tmp/SPheromone/manager/manager 1>${log_dir}/manager.log 2>&1 &
 

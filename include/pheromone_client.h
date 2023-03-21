@@ -218,6 +218,17 @@ void PheromoneClient::add_trigger(std::string app_name, std::string bucket_name,
         auto prm = ImmediatePrimitive();
         prm.set_function(primitive["function"]);
         prm.SerializeToString(&prm_serialized);
+    } else if (primitive_type == BY_SET) {
+        auto prm = BySetPrimitive();
+        prm.set_function(primitive["function"]);
+
+        auto key_names = primitive["key_name"];
+        auto ptr = strtok(const_cast<char *>(key_names.c_str()), " ");
+        while(ptr != nullptr){
+            prm.add_key_set(ptr);
+            ptr = strtok(nullptr, " ");
+        }
+        prm.SerializeToString(&prm_serialized);
     }
     req.set_primitive(prm_serialized);
 

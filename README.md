@@ -12,10 +12,11 @@ sudo apt-get install libprotobuf-dev protobuf-compiler
 
 ## Build
 
+set `Build Directory` ad `/tmp/SPheromone129`, and then build
+
 ## Run
 
-- First, build shared library, like `exp01_frontend`
-- Second, run `manager`,`coordinator`,`scheduler`,`executor` with env `CONFIG_FILE`
+ref `benchmarks/01`
 
 ## Benchmarks
 

@@ -3,6 +3,9 @@ project(SPheromone)
 set(CMAKE_CXX_STANDARD 17)
 
 add_compile_options(-DCPPZMQ_BUILD_TESTS=OFF)
+add_compile_options(-fexceptions)
+add_compile_options(-frtti)
+add_compile_options(-fPIC)
 
 set(BASE_DIR ${CMAKE_SOURCE_DIR})
 
@@ -11,6 +14,7 @@ include_directories(deps/shm-ipc/include)
 include_directories(include)
 include_directories(common/include)
 include_directories(src-gen/)
+include_directories(deps/libmc)
 
 # deps
 add_subdirectory(deps/shm-ipc shm-ipc)
@@ -18,6 +22,9 @@ add_subdirectory(deps/shm-ipc shm-ipc)
 add_subdirectory(deps/yaml-cpp yaml-cpp)
 add_subdirectory(deps/zeromq zeromq)
 add_subdirectory(deps/fmt fmt)
+add_subdirectory(deps/hiredis hiredis)
+add_subdirectory(deps/libmc libmc)
+add_subdirectory(deps/json json)
 
 ## zeromq
 set(CPPZMQ_BUILD_TESTS FALSE)

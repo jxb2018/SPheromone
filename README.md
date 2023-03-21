@@ -8,6 +8,13 @@ Simple Pheromone
 ```shell
 sudo apt-get install libyaml-cpp-dev
 sudo apt-get install libprotobuf-dev protobuf-compiler
+sudo apt-get install -y libzstd-dev libssl-dev libz-dev
+
+# mongo-c-driver
+sudo apt-get install -y libmongoc-dev libbson-dev libbson-1.0-0
+
+# boost
+sudo apt install libboost-all-dev
 ```
 
 ## Build

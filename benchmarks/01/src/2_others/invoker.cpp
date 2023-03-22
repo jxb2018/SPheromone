@@ -5,7 +5,8 @@
 #include "pheromone_client.h"
 
 int main() {
-    PheromoneClient client("127.0.0.1");
+    auto manager_ip = getenv("MANAGER_IP");
+    PheromoneClient client(manager_ip);
 
     // app name
     std::string app_name("exp01");

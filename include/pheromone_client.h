@@ -79,7 +79,10 @@ public:
         delete ort_;
     }
 
-    void register_app(std::string app_name, std::vector<std::string> funcs);
+    void register_app(std::string app_name, std::vector<std::string> funcs,
+                      std::vector<std::tuple<std::vector<std::string>,
+                              std::vector<std::string>,
+                              DependencyType>> dependency);
 
     void create_bucket(std::string app_name, std::string bucket_name);
 
@@ -139,13 +142,30 @@ PheromoneClient::PheromoneClient(std::string manager_ip, int thread_id) {
     trigger_op_puller_->bind(ort_->trigger_req_bind_address());
 }
 
-void PheromoneClient::register_app(std::string app_name, std::vector<std::string> funcs) {
+void PheromoneClient::register_app(std::string app_name, std::vector<std::string> funcs,
+                                   std::vector<std::tuple<std::vector<std::string>,
+                                           std::vector<std::string>,
+                                           DependencyType>> dependency) {
     AppRegistration msg;
 
     auto coord_thread = get_coord(app_name);
 
     for (auto &func: funcs)
         msg.add_functions(func);
+
+    for (auto &d : dependency){
+        auto dep = msg.add_dependencies();
+        for (auto &src : std::get<0>(d)){
+            dep->add_src_functions(src);
+        }
+
+        for (auto &tgt : std::get<1>(d)){
+            dep->add_tgt_functions(tgt);
+        }
+        dep->set_type(std::get<2>(d));
+
+        // TODO: len(d) >= 4
+    }
 
     std::string serialized;
     msg.SerializeToString(&serialized);
@@ -224,7 +244,7 @@ void PheromoneClient::add_trigger(std::string app_name, std::string bucket_name,
 
         auto key_names = primitive["key_name"];
         auto ptr = strtok(const_cast<char *>(key_names.c_str()), " ");
-        while(ptr != nullptr){
+        while (ptr != nullptr) {
             prm.add_key_set(ptr);
             ptr = strtok(nullptr, " ");
         }

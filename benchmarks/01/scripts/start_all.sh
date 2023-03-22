@@ -8,6 +8,7 @@ mkdir ${log_dir}
 build_dir=/tmp/SPheromone129
 
 export CONFIG_FILE=$(pwd)/../config/config.yml
+export MANAGER_IP="127.0.0.1"
 
 ${build_dir}/manager/manager 1>${log_dir}/manager.log 2>&1 &
 

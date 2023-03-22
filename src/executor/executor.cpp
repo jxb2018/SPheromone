@@ -226,11 +226,11 @@ int main(int argc, char *argv[]) {
         local_chan->disconnect();
         std::cout << "Exit with env cleared" << std::endl;
     };
-    ::signal(SIGINT, exit);
-    ::signal(SIGABRT, exit);
-    ::signal(SIGSEGV, exit);
-    ::signal(SIGTERM, exit);
-    ::signal(SIGHUP, exit);
+//    ::signal(SIGINT, exit);
+//    ::signal(SIGABRT, exit);
+//    ::signal(SIGSEGV, exit);
+//    ::signal(SIGTERM, exit);
+//    ::signal(SIGHUP, exit);
 
     // read the YAML conf
     auto config_file_path = getenv("CONFIG_FILE");

@@ -4,8 +4,6 @@
 
 #include "pheromone_client.h"
 
-#define TUPLE std::tuple<std::vector<std::string>, std::vector<std::string>, DependencyType>
-
 int main() {
     auto manager_ip = getenv("MANAGER_IP");
     PheromoneClient client(manager_ip);

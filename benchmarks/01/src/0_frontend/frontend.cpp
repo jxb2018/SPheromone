@@ -5,8 +5,11 @@
 #include "iostream"
 #include "cpp_function.hpp"
 #include "utils.h"
+#include <vector>
 
 using namespace exp01;
+
+#define MAX(x, y) x>y?x:y;
 
 extern "C" {
 int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
@@ -39,23 +42,21 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
     // step2 : generate payload
 
     // reserve the space for storing chain length
-    will_generate_payload_size = will_generate_payload_size < sizeof(int) ? sizeof(int) : will_generate_payload_size;
+    will_generate_payload_size = MAX(64, will_generate_payload_size);
 
-    auto object = library->create_object("exp01_backend", true, will_generate_payload_size);
-    auto out_ptr = reinterpret_cast<char *>(object->get_value());
+    // step3: via interface
+    EpheObject *obj;
+    if(will_generate_payload_size < 1024){
+        obj = library->create_object(will_generate_payload_size);
+    }else{
+        obj = library->create_object("exp01_backend", true, will_generate_payload_size);
+    }
+    auto val = (char *)(obj->get_value());
+    memset(val, 'a', will_generate_payload_size);
+    val[will_generate_payload_size - 1] = '\0';
 
-    // set function chain
-    strcpy(out_ptr, std::to_string(chain_length).c_str());
-    std::cout << "chain_length: " << chain_length << ", generated_payload_size: " << will_generate_payload_size << std::endl;
-
-    // step3: invoke downstream via interface
-    auto start_time = exp01::get_timestamp_us();
-    library->send_object(object);
-
-    // test cross-node
-//    sleep(2);
-
-    std::cout << "start_time: " << start_time << std::endl;
+    std::cout << "send payload, size = " << will_generate_payload_size << ", start_time = " << exp01::get_timestamp_us() << std::endl;
+    library->send_object(obj);
 
     return 0;
 }

@@ -32,6 +32,8 @@ using vector = std::vector<T>;
 #define TRIGGER_REQ_PORT 12170
 #define TRIGGER_OP_PORT 7900
 
+#define TUPLE std::tuple<std::vector<std::string>, std::vector<std::string>, DependencyType>
+
 class OperationRequestThread {
 public:
     OperationRequestThread(std::string ip_addr, int thread_id) :
@@ -80,9 +82,7 @@ public:
     }
 
     void register_app(std::string app_name, std::vector<std::string> funcs,
-                      std::vector<std::tuple<std::vector<std::string>,
-                              std::vector<std::string>,
-                              DependencyType>> dependency);
+                      std::vector<TUPLE> dependency);
 
     void create_bucket(std::string app_name, std::string bucket_name);
 
@@ -143,9 +143,7 @@ PheromoneClient::PheromoneClient(std::string manager_ip, int thread_id) {
 }
 
 void PheromoneClient::register_app(std::string app_name, std::vector<std::string> funcs,
-                                   std::vector<std::tuple<std::vector<std::string>,
-                                           std::vector<std::string>,
-                                           DependencyType>> dependency) {
+                                   std::vector<TUPLE> dependency) {
     AppRegistration msg;
 
     auto coord_thread = get_coord(app_name);

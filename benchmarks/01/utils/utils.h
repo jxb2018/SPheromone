@@ -20,6 +20,14 @@
 
 namespace exp01 {
 
+    struct Head {
+        long chain_length;
+        long payload_size;
+        long send_time;
+    };
+
+    static_assert(sizeof(Head) == 24);
+
     long get_timestamp_us() {
         struct timespec time_stamp;
 

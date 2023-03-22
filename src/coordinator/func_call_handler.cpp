@@ -140,7 +140,7 @@ void func_call_handler(string &serialized, SocketCache &pushers,
             string func_exec_addr = get_func_exec_address(node_msg.first, rand_r(&seed) % io_thread_num);
             kZmqUtil->send_string(node_msg.second, &pushers[func_exec_addr]);
         }
-        std::cout << fmt::format("App function call {}. recv: {}, scheduled {}.", app_name, receive_req_stamp,
-                                 scheduled_stamp) << std::endl;
+//        std::cout << fmt::format("App function call {}. recv: {}, scheduled {}.", app_name, receive_req_stamp,
+//                                 scheduled_stamp) << std::endl;
     }
 }

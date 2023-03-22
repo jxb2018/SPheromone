@@ -1,0 +1,38 @@
+# For Manager
+manager:
+  ip: 192.168.1.129
+  external: 0
+
+# For Coordinator
+coordinator:
+  coord_threads: 1
+  io_threads: 1
+  manager: 192.168.1.129
+  ip:
+    private: 192.168.1.129
+    public: 192.168.1.129
+  delay: 0
+
+# For scheduler
+scheduler:
+  threads:
+    coord: 1
+    io: 1
+  func_dir: /tmp/shm/
+  delay: 0
+  shared: 1
+  forward_or_reject: 0
+  user:
+    ip: 192.168.1.129
+    executor: 4
+    routing-elb: 192.168.1.129
+    coord:
+#      - 192.168.1.126
+      - 192.168.1.129
+
+# For Executor
+executor:
+  func_dir: /tmp/shm/
+  wait: 0
+  ip: 192.168.1.129
+  thread_id: 0

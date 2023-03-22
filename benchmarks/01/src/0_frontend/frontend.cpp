@@ -52,10 +52,11 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
         obj = library->create_object("exp01_backend", true, will_generate_payload_size);
     }
     auto val = (char *)(obj->get_value());
-    memset(val, 'a', will_generate_payload_size);
+    memset(val, 0xff, will_generate_payload_size);
     val[will_generate_payload_size - 1] = '\0';
 
-    std::cout << "send payload, size = " << will_generate_payload_size << ", start_time = " << exp01::get_timestamp_us() << std::endl;
+    auto send_time = std::to_string(exp01::get_timestamp_us());
+    strncpy(val, send_time.c_str(), 16);
     library->send_object(obj);
 
     return 0;

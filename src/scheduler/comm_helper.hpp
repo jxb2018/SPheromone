@@ -606,9 +606,9 @@ private:
             resp.func_args_.push_back(args);
         }
         string name_to_log = resp.func_name_.size() == 1 ? resp.func_name_[0] : resp.app_name_;
-        std::cout << fmt::format("Function call {} io_thread {}. num: {}, recv: {}.", name_to_log, tid,
-                                 resp.func_name_.size(),
-                                 receive_call_stamp) << std::endl;
+//        std::cout << fmt::format("Function call {} io_thread {}. num: {}, recv: {}.", name_to_log, tid,
+//                                 resp.func_name_.size(),
+//                                 receive_call_stamp) << std::endl;
     }
 
     void handle_data_request(zmq::message_t &message, SocketCache &pushers, unsigned tid = 0) {

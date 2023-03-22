@@ -249,7 +249,13 @@ int main(int argc, char *argv[]) {
     }
 
     Address ip = executor["ip"].as<Address>();
-    auto thread_id = executor["thread_id"].as<unsigned>();
 
+    int thread_id;
+    try{
+        thread_id = std::stoi(argv[1]);
+    }catch (std::exception &e){
+        std::cerr << "bad input!" << std::endl;
+        return -1;
+    }
     run(ip, thread_id);
 }

@@ -169,8 +169,8 @@ void run(Address ip, unsigned thread_id) {
                 auto parse_time = std::chrono::duration_cast<std::chrono::microseconds>(
                         parse_stamp.time_since_epoch()).count();
 
-                std::cout << fmt::format("Executing {} arg_size: {}. recv: {}, parse: {}", func_name, arg_size,
-                                         recv_time, parse_time) << std::endl;
+//                std::cout << fmt::format("Executing {} arg_size: {}. recv: {}, parse: {}", func_name, arg_size,
+//                                         recv_time, parse_time) << std::endl;
 
                 int exit_signal = 1;
 
@@ -200,7 +200,7 @@ void run(Address ip, unsigned thread_id) {
 
                 auto execute_time = std::chrono::duration_cast<std::chrono::microseconds>(
                         execute_stamp.time_since_epoch()).count();
-                std::cout << fmt::format("Executed {} at: {}", func_name, execute_time) << std::endl;
+//                std::cout << fmt::format("Executed {} at: {}", func_name, execute_time) << std::endl;
 
             }
         }

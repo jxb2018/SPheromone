@@ -16,7 +16,7 @@ ${build_dir}/coordinator/coordinator 1>${log_dir}/coordinator.log 2>&1 &
 
 ${build_dir}/scheduler/scheduler 1>${log_dir}/scheduler.log 2>&1 &
 
-${build_dir}/executor/executor 1>${log_dir}/executor.log 2>&1 &
+${build_dir}/executor/executor 0 1>${log_dir}/executor.log 2>&1 &
 
 sleep 1
 

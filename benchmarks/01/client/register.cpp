@@ -36,19 +36,7 @@ int main(int argc, char **argv) {
     std::string trigger_name("trigger1");
     client.add_trigger(app_name, bucket_name, trigger_name, IMMEDIATE, primitive, 0);
 
-    // step2: invoke
-    std::vector<std::string> payloads = {"512B", "1KB", "512KB", "1MB", "512MB", "1GB"};
-
-    int duplicated_time = 10;
-    for (auto &payload: payloads) {
-        std::vector<std::string> args;
-        args.emplace_back("4"); // function chain length, like "4"
-        args.emplace_back(payload); // payload size
-        for (int i = 0; i < duplicated_time; i++) {
-            client.call_app(app_name, "exp01_frontend", args);
-            sleep(1);
-        }
-    }
+    std::cout << "register finished!" << std::endl;
 
     return 0;
 }

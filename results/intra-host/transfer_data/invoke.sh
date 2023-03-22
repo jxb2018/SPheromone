@@ -13,4 +13,12 @@ fi
 
 export MANAGER_IP="192.168.1.129"
 
-${build_dir}/benchmarks/01/exp01_client
+payloads=("256B" "512B" "1KB" "512KB" "1MB" "512MB" "1GB")
+
+# shellcheck disable=SC2068
+for payload in ${payloads[@]}; do
+  for i in {1..5}; do
+    ${build_dir}/benchmarks/01/exp01_invoker "4" ${payload}
+    sleep 1s
+  done
+done

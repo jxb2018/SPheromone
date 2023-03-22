@@ -27,7 +27,6 @@ scheduler:
     executor: 4
     routing-elb: 192.168.1.129
     coord:
-#      - 192.168.1.126
       - 192.168.1.129
 
 # For Executor
@@ -35,4 +34,3 @@ executor:
   func_dir: /tmp/shm/
   wait: 0
   ip: 192.168.1.129
-  thread_id: 0

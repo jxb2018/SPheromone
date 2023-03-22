@@ -46,11 +46,12 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
 
     // step3: via interface
     EpheObject *obj;
-    if(will_generate_payload_size < 1024){
-        obj = library->create_object(will_generate_payload_size);
-    }else{
-        obj = library->create_object("exp01_backend", true, will_generate_payload_size);
-    }
+//    if(will_generate_payload_size < 1024){
+//        obj = library->create_object(will_generate_payload_size);
+//    }else{
+//        obj = library->create_object("exp01_backend", true, will_generate_payload_size);
+//    }
+    obj = library->create_object(will_generate_payload_size);
     auto val = (char *)(obj->get_value());
     memset(val, 0xff, will_generate_payload_size);
     val[will_generate_payload_size - 1] = '\0';

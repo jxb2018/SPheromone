@@ -27,14 +27,14 @@ int main(int argc, char **argv) {
 
     // step2: create bucket
     std::string bucket_name("b_exp01_backend");
-    client.create_bucket(app_name, bucket_name);
+//    client.create_bucket(app_name, bucket_name);
 
     // step3: create trigger
     std::map<std::string, std::string> primitive;
     primitive["function"] = "exp01_backend";
     primitive["key_name"] = "k_exp01_frontend";
     std::string trigger_name("trigger1");
-    client.add_trigger(app_name, bucket_name, trigger_name, IMMEDIATE, primitive, 0);
+//    client.add_trigger(app_name, bucket_name, trigger_name, IMMEDIATE, primitive, 0);
 
     std::cout << "register finished!" << std::endl;
 

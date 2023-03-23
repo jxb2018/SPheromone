@@ -1,21 +1,23 @@
-transfer payload, size = 511, token 482
-transfer payload, size = 511, token 578
-transfer payload, size = 511, token 555
-transfer payload, size = 511, token 556
-transfer payload, size = 511, token 586
-transfer payload, size = 511, token 504
-transfer payload, size = 511, token 581
-transfer payload, size = 511, token 516
-
-transfer payload, size = 1023, token 594
-transfer payload, size = 1023, token 494
-transfer payload, size = 1023, token 521
-transfer payload, size = 1023, token 492
-transfer payload, size = 1023, token 495
-transfer payload, size = 1023, token 565
-transfer payload, size = 1023, token 535
-transfer payload, size = 1023, token 503
-transfer payload, size = 1023, token 595
-transfer payload, size = 1023, token 577
+transfer payload, size = 255, token 1436
+transfer payload, size = 255, token 1120
+transfer payload, size = 255, token 1137
+transfer payload, size = 511, token 1618
+transfer payload, size = 511, token 1050
+transfer payload, size = 511, token 1076
+transfer payload, size = 1023, token 1276
+transfer payload, size = 1023, token 1119
+transfer payload, size = 1023, token 1156
+transfer payload, size = 524287, token 4147
+transfer payload, size = 524287, token 3269
+transfer payload, size = 524287, token 3217
+transfer payload, size = 1048575, token 5965
+transfer payload, size = 1048575, token 5789
+transfer payload, size = 1048575, token 4875
+transfer payload, size = 1048575, token 10467
+transfer payload, size = 536870911, token 2151695
+transfer payload, size = 536870911, token 1699113
+transfer payload, size = 536870911, token 1743091
+transfer payload, size = 1073741823, token 3513698
+transfer payload, size = 1073741823, token 3171540
 
 

@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
     // invoke
     client.call_app(app_name, "exp00_front", args);
 
-    std::cout << "invoke finished!" << std::endl;
+//    std::cout << "invoke finished!" << std::endl;
 
     return 0;
 }

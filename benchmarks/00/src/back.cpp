@@ -23,7 +23,8 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
     }
 
     if (cur_chain_len == 1) {
-        std::cout << "chain_length " << total_chain_len <<
+        std::cout << "chain_length = " << total_chain_len <<
+                  ", payload_size = " << payload_size <<
                   ", token " << end_t - send_time << " us." << std::endl;
         return 0;
     } else if (cur_chain_len > 1) {

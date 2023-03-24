@@ -29,8 +29,8 @@ ref `benchmarks/01`
 
 <pre><code>
 benchmarks
-    |---00 # compare different function communication method
-    |---01 # application: long chain
+    |---00 # application: long function chain
+    |---01 # application: test transfer data
     |---02 # real serverless application: media service
     |---03 # real serverless application: ml pipeline
     |---04 # real serverless application: finra

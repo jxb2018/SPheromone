@@ -96,7 +96,7 @@ void run(Address ip, unsigned thread_id) {
 
                 string func_name = func_with_args[0];
                 // int func_id = stoi(func_with_args[1]);
-                // std::cout << "Received function call " << func_name << "\n" << std::flush;
+                std::cout << "Received function call " << func_name << "\n" << std::flush;
 
                 static_cast<UserLibrary *>(user_lib)->set_function_name(func_name);
                 static_cast<UserLibrary *>(user_lib)->set_session_id(session_id);

@@ -31,8 +31,10 @@ ref `benchmarks/01`
 benchmarks
     |---00 # application: long function chain
     |---01 # application: test transfer data
-    |---02 # real serverless application: media service
+    |---02 # real serverless application: media service (making...)
     |---03 # real serverless application: ml pipeline
-    |---04 # real serverless application: finra
+    |---04 # real serverless application: finra (making...)
 |---Lumine
 </code></pre>
+
+

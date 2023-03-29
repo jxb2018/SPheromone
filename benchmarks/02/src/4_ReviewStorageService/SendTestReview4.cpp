@@ -4,6 +4,7 @@
 
 #include "cpp_function.hpp"
 #include "utils_for_test.h"
+#include <nlohmann/json.hpp>
 #include "ReviewStorageHandler.h"
 
 using namespace media_service;
@@ -11,7 +12,7 @@ using namespace media_service;
 extern "C" {
 int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
 
-    auto obj = library->create_object("exp02_store_function_4", true, sizeof(Review)+5);
+    using json = nlohmann::json;
 
     // make Review
     srand(time(nullptr));
@@ -26,11 +27,26 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
     review->rating = rand();
     review->timestamp = utils::get_timestamp_us();
 
+    json j;
+    j["review_id"]=review->review_id;
+    j["user_id"]=review->user_id;
+    j["req_id"]=review->req_id;
+    j["text"]=review->text;
+    j["movie_id"]=review->movie_id;
+    j["rating"]=review->rating;
+    j["timestamp"]=review->timestamp;
+
+    string str=j.dump();
+    std::cout<<str<<std::endl;
+    auto obj = library->create_object("exp02_store_review_4", true, sizeof(str)+5);
+
     auto val = (char *) (obj->get_value());
-    memcpy(val, buf, sizeof(Review));
-    val[sizeof(Review)]='\0';
+    memcpy(val, str.c_str(), sizeof(str));
+    val[sizeof(str)]='\0';
 
     library->send_object(obj);
+
+    std::cout<<"send finished!"<<std::endl;
 
     return 0;
 }

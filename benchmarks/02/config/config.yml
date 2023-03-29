@@ -24,7 +24,7 @@ scheduler:
   forward_or_reject: 0
   user:
     ip: 127.0.0.1
-    executor: 1
+    executor: 2
     routing-elb: 127.0.0.1
     coord:
       - 127.0.0.1

@@ -4,6 +4,7 @@
 
 #include "cpp_function.hpp"
 #include "ReviewStorageHandler.h"
+#include <nlohmann/json.hpp>
 
 using namespace media_service;
 
@@ -13,14 +14,21 @@ static ClientPool<MCClient> *g_mc_client_pool;
 extern "C" {
 int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
 
+    using json = nlohmann::json;
+
     init_review_storage(g_mongodb_client_pool, g_mc_client_pool);
 
-    EpheObject *obj;
-    obj = library->get_object("b_exp02_store_review_4", "k_exp02_send_review_4", true);
+    json j = json::parse(arg_values[0]);
+    std::cout << j << std::endl;
 
-    auto val = (char *) (obj->get_value());
-
-    auto review = reinterpret_cast<const Review *>(val);
+    Review *review;
+    review->review_id=j["review_id"];
+    review->user_id=j["user_id"];
+    review->req_id=j["req_id"];
+    strcpy(review->text, ((std::string)j["text"]).c_str());
+    strcpy(review->movie_id, ((std::string)j["movie_id"]).c_str());
+    review->rating=j["rating"];
+    review->timestamp=j["timestamp"];
 
     auto handler = new ReviewStorageHandler(g_mc_client_pool, g_mongodb_client_pool);
     int ret = handler->StoreReview(*review);

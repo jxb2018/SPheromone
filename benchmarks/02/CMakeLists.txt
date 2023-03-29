@@ -15,12 +15,19 @@ set(EXP02_COMMON_LIB
         ${Boost_LIBRARIES}
         nlohmann_json mc hiredis fmt)
 
-# one: store review
+# 4 store review
 set(EXP02_STORE_REVIEW_4 exp02_store_review_4)
 add_library(${EXP02_STORE_REVIEW_4} SHARED src/4_ReviewStorageService/StoreReview4.cpp)
 target_link_libraries(${EXP02_STORE_REVIEW_4} ${EXP02_COMMON_LIB})
 set_target_properties(${EXP02_STORE_REVIEW_4} PROPERTIES OUTPUT_NAME ${EXP02_STORE_REVIEW_4})
 set_target_properties(${EXP02_STORE_REVIEW_4} PROPERTIES PREFIX "")
+
+# 3 compose review
+set(EXP02_COMPOSE_REVIEW_3 exp02_compose_review_3)
+add_library(${EXP02_COMPOSE_REVIEW_3} SHARED src/3_ComposeReviewService/UploadText3.cpp)
+target_link_libraries(${EXP02_COMPOSE_REVIEW_3} ${EXP02_COMMON_LIB})
+set_target_properties(${EXP02_COMPOSE_REVIEW_3} PROPERTIES OUTPUT_NAME ${EXP02_COMPOSE_REVIEW_3})
+set_target_properties(${EXP02_COMPOSE_REVIEW_3} PROPERTIES PREFIX "")
 
 # send test review
 set(EXP02_SEND_REVIEW_4 exp02_send_review_4)
@@ -40,14 +47,14 @@ set(EXP_COMMON_FILES
 
 set(EXP_COMMON_LIBRARIES libzmq cppzmq shm-ipc rt fmt yaml-cpp dl ${Protobuf_LIBRARIES})
 
-## store review register
-add_executable(exp02_register_store_review_4
+## test1 register
+add_executable(exp02_register_test1
         ${EXP_COMMON_FILES}
-        ${BASE_DIR}/benchmarks/02/test/register_store_review_4.cpp)
-TARGET_LINK_LIBRARIES(exp02_register_store_review_4 ${EXP_COMMON_LIBRARIES})
+        ${BASE_DIR}/benchmarks/02/test/register_test1.cpp)
+TARGET_LINK_LIBRARIES(exp02_register_test1 ${EXP_COMMON_LIBRARIES})
 
-## store review invoker
-add_executable(exp02_invoker_store_review_4
+## test1 invoker
+add_executable(exp02_invoker_test1
         ${EXP_COMMON_FILES}
-        ${BASE_DIR}/benchmarks/02/test/invoker_store_review_4.cpp)
-TARGET_LINK_LIBRARIES(exp02_invoker_store_review_4 ${EXP_COMMON_LIBRARIES})
+        ${BASE_DIR}/benchmarks/02/test/invoker_test1.cpp)
+TARGET_LINK_LIBRARIES(exp02_invoker_test1 ${EXP_COMMON_LIBRARIES})

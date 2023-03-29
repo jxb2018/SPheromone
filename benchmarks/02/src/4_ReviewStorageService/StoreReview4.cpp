@@ -5,6 +5,7 @@
 #include "cpp_function.hpp"
 #include "ReviewStorageHandler.h"
 #include <nlohmann/json.hpp>
+#include <string>
 
 using namespace media_service;
 
@@ -21,12 +22,12 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
     json j = json::parse(arg_values[0]);
     std::cout << j << std::endl;
 
-    Review *review;
+    auto review = new Review();
     review->review_id=j["review_id"];
     review->user_id=j["user_id"];
     review->req_id=j["req_id"];
-    strcpy(review->text, ((std::string)j["text"]).c_str());
-    strcpy(review->movie_id, ((std::string)j["movie_id"]).c_str());
+    strcpy(review->text, j["text"].get<std::string>().c_str());
+    strcpy(review->movie_id, j["movie_id"].get<std::string>().c_str());
     review->rating=j["rating"];
     review->timestamp=j["timestamp"];
 

@@ -6,6 +6,7 @@
 #include "utils_for_test.h"
 #include <nlohmann/json.hpp>
 #include "ReviewStorageHandler.h"
+#include <cstring>
 
 using namespace media_service;
 
@@ -38,11 +39,11 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
 
     string str=j.dump();
     std::cout<<str<<std::endl;
-    auto obj = library->create_object("exp02_store_review_4", true, sizeof(str)+5);
+    auto obj = library->create_object("exp02_store_review_4", true, 2048);
 
     auto val = (char *) (obj->get_value());
-    memcpy(val, str.c_str(), sizeof(str));
-    val[sizeof(str)]='\0';
+    memset(val, 0, 2048);
+    strcpy(val, str.c_str());
 
     library->send_object(obj);
 

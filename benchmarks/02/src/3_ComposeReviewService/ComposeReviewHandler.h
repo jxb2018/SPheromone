@@ -2,14 +2,15 @@
 // Created by mutuxixi on 3/29/23.
 //
 
-#ifndef LUMINE_EXPERIMENTS_COMPOSEREVIEWHANDLER_H
-#define LUMINE_EXPERIMENTS_COMPOSEREVIEWHANDLER_H
+#ifndef SPHEROMONE_COMPOSEREVIEWHANDLER_H
+#define SPHEROMONE_COMPOSEREVIEWHANDLER_H
 
 #include "MediaServiceTypes.h"
 #include "utils_mongodb.h"
 #include "utils_memcached.h"
 #include "utils.h"
 #include "cpp_function.hpp"
+#include <nlohmann/json.hpp>
 
 //#define NUM_COMPONENTS 5
 #define NUM_COMPONENTS 4
@@ -120,21 +121,24 @@ namespace media_service {
 
         mc_client_pool_->Push(mc_client);
 
-//        const char *store_review4_output;
-//        size_t store_review4_length;
-//        int ret = faas_worker_->invoke_func_fn_(faas_worker_->caller_context_,
-//                                                "exp02StoreReview4",
-//                                                reinterpret_cast<char *>(&new_review),
-//                                                sizeof(Review),
-//                                                &store_review4_output,
-//                                                &store_review4_length,
-//                                                ChooseMessagePassingMethod());
+        json j;
+        j["review_id"]=new_review.review_id;
+        j["user_id"]=new_review.user_id;
+        j["req_id"]=new_review.req_id;
+        j["text"]=new_review.text;
+        j["movie_id"]=new_review.movie_id;
+        j["rating"]=new_review.rating;
+        j["timestamp"]=new_review.timestamp;
 
-        int ret = ;
+        auto str = j.dump();
+        auto obj = library_->create_object("exp02_store_review_4", true, 2048);
 
-        if (ret != 0) {
-            return -1;
-        }
+        auto val = (char *) (obj->get_value());
+        memset(val, 0, 2048);
+        strcpy(val, str.c_str());
+
+        library_->send_object(obj);
+
         return 0;
     }
 
@@ -251,4 +255,4 @@ namespace media_service {
 
 }
 
-#endif //LUMINE_EXPERIMENTS_COMPOSEREVIEWHANDLER_H
+#endif //SPHEROMONE_COMPOSEREVIEWHANDLER_H

@@ -1,5 +1,5 @@
 //
-// Created by mutuxixi on 3/29/23.
+// Created by mutuxixi on 23-4-1.
 //
 
 #include "cpp_function.hpp"
@@ -19,14 +19,14 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
 
     json j = json::parse(arg_values[0]);
 
-    auto text = new Text();
-    text->req_id = j["req_id"];
-    strcpy(text->text, j["text"].get<std::string>().c_str());
+    auto unique_id  = new UniqueId();
+    unique_id->req_id = j["req_id"];
+    unique_id->review_id = j["review_id"];
 
     auto handler = new ComposeReviewHandler(g_mc_client_pool, library);
-    int ret = handler->UploadText(*text);
+    int ret = handler->UploadUniqueId(*unique_id);
 
-    std::cout << "UploadText3 finished!" << std::endl;
+    std::cout << "UploadUniqueId3 finished!" << std::endl;
 
     return ret;
 }

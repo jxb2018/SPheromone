@@ -15,7 +15,8 @@ int main(int argc, char **argv) {
     std::vector<std::string> args;
 //    args.emplace_back(argv[1]); // function chain length, like "4"
 //    args.emplace_back(argv[2]); // payload size
-    client.call_app(app_name, "exp02_send_review_4", args);
+//    client.call_app(app_name, "exp02_send_review_4", args);
+    client.call_app(app_name, "exp02_web_server_0", args);
 
     return 0;
 }

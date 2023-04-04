@@ -1,5 +1,5 @@
 //
-// Created by mutuxixi on 3/29/23.
+// Created by mutuxixi on 23-4-1.
 //
 
 #include "cpp_function.hpp"
@@ -19,14 +19,15 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
 
     json j = json::parse(arg_values[0]);
 
-    auto text = new Text();
-    text->req_id = j["req_id"];
-    strcpy(text->text, j["text"].get<std::string>().c_str());
+    auto movie_id  = new MovieId();
+    movie_id->req_id = j["req_id"];
+    movie_id->rating = j["rating"];
+    strcpy(movie_id->movie_id, j["movie_id"].get<std::string>().c_str());
 
     auto handler = new ComposeReviewHandler(g_mc_client_pool, library);
-    int ret = handler->UploadText(*text);
+    int ret = handler->UploadMovieId(*movie_id);
 
-    std::cout << "UploadText3 finished!" << std::endl;
+    std::cout << "UploadMovieId3 finished!" << std::endl;
 
     return ret;
 }

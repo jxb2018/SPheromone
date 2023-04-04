@@ -20,7 +20,6 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
     init_review_storage(g_mongodb_client_pool, g_mc_client_pool);
 
     json j = json::parse(arg_values[0]);
-    std::cout << j << std::endl;
 
     auto review = new Review();
     review->review_id=j["review_id"];
@@ -31,10 +30,18 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
     review->rating=j["rating"];
     review->timestamp=j["timestamp"];
 
+    std::cout << "review_id: " << review->review_id << std::endl;
+    std::cout << "user_id: " << review->user_id << std::endl;
+    std::cout << "req_id: " << review->req_id << std::endl;
+    std::cout << "text: " << review->text << std::endl;
+    std::cout << "movie_id: " << review->movie_id << std::endl;
+    std::cout << "rating: " << review->rating << std::endl;
+    std::cout << "timestamp: " << review->timestamp << std::endl;
+
     auto handler = new ReviewStorageHandler(g_mc_client_pool, g_mongodb_client_pool);
     int ret = handler->StoreReview(*review);
 
-    std::cout << "finished!" << std::endl;
+    std::cout << "StoreReview4 finished!" << std::endl;
 
     return ret;
 }

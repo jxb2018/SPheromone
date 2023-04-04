@@ -13,8 +13,8 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
     using json = nlohmann::json;
 
     json j;
-    j["req_id"] = 114;
-    j["rating"] = 514;
+    j["req_id"] = 1;
+    j["rating"] = 1;
     j["title"] = utils::RandomString(64);
     j["text"] = utils::RandomString(64);
     j["movie_id"] = utils::RandomString(64);
@@ -23,7 +23,7 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
 //    j["movie_id"] = "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc";
 
     string str = j.dump();
-    // text text service
+    // text register movieid
     auto obj = library->create_object("exp02_register_movieid_1", true, 1024);
     auto val = (char *) (obj->get_value());
     memset(val, 0, 1024);

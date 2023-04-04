@@ -15,6 +15,11 @@ static ClientPool<MCClient> *g_mc_client_pool;
 extern "C" {
 int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
 
+    std::cout<<"input is:"<<std::endl;
+    for(int i=0;i<arg_size;i++){
+        std::cout<<arg_values[i]<<std::endl;
+    }
+
     using json = nlohmann::json;
 
     init_review_storage(g_mongodb_client_pool, g_mc_client_pool);

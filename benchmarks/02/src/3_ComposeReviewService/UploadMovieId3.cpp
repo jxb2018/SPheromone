@@ -21,7 +21,7 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
 
     auto movie_id  = new MovieId();
     movie_id->req_id = j["req_id"];
-    movie_id->rating = j["rating"];
+//    movie_id->rating = j["rating"];
     strcpy(movie_id->movie_id, j["movie_id"].get<std::string>().c_str());
 
     auto handler = new ComposeReviewHandler(g_mc_client_pool, library);

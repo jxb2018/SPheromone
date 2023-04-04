@@ -27,4 +27,4 @@ done
 sleep 1
 
 # store review register
-${build_dir}/benchmarks/02/exp02_register_test1
+${build_dir}/benchmarks/exp02/exp02_register_test1

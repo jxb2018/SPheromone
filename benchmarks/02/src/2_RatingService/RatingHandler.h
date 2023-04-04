@@ -16,7 +16,7 @@
 namespace media_service {
     using json = nlohmann::json;
 
-    int init_rating(ClientPool<RedisClient> *redis_client_pool) {
+    int init_rating(ClientPool<RedisClient> *&redis_client_pool) {
         json config_json;
 
         // step 01: init logger

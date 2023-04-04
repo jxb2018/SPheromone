@@ -153,10 +153,11 @@ namespace media_service {
 
         library_->send_object(obj1);
 
-        // Upload Rating 3
+        // Upload Rating 2
         json j2;
         j2["req_id"]=val.req_id;
         j2["rating"]=val.rating;
+        j2["movie_id"]=movie_id_str;
 
         auto str2 = j2.dump();
         auto obj2 = library_->create_object("exp02_upload_rating_2", true, 512);

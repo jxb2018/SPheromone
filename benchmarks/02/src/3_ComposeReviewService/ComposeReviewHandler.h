@@ -216,6 +216,7 @@ namespace media_service {
         // If this thread is the last one uploading the review components,
         // it is in charge of compose the request and upload to the microservices in
         // the next tier.
+        std::cout<<"counter_value: "<<counter_value<<std::endl;
         if (counter_value == NUM_COMPONENTS) {
             ComposeAndUpload(req_id);
         }
@@ -224,33 +225,90 @@ namespace media_service {
     }
 
     int ComposeReviewHandler::UploadText(const Text &val) {
-        Review review{};
-        review.req_id = val.req_id;
-        strcpy(review.text, val.text);
-        return Upload(review, UploadOp::UploadText);
+//        Review review{};
+//        review.req_id = val.req_id;
+//        strcpy(review.text, val.text);
+
+        json j;
+        j["req_id"]=val.req_id;
+        j["text"]=val.text;
+
+        auto str = j.dump();
+        auto obj = library_->create_object("exp02_store_review_4", true, 2048);
+
+        auto v = (char *) (obj->get_value());
+        memset(v, 0, 2048);
+        strcpy(v, str.c_str());
+
+        library_->send_object(obj);
+
+//        return Upload(review, UploadOp::UploadText);
+        return 0;
     }
 
     int ComposeReviewHandler::UploadUniqueId(const UniqueId &val) {
-        Review review = {
-                .review_id = val.review_id,
-                .req_id = val.req_id
-        };
-        return Upload(review, UploadOp::UploadUniqueId);
+//        Review review = {
+//                .review_id = val.review_id,
+//                .req_id = val.req_id
+//        };
+
+        json j;
+        j["review_id"]=val.review_id;
+        j["req_id"]=val.req_id;
+
+        auto str = j.dump();
+        auto obj = library_->create_object("exp02_store_review_4", true, 2048);
+
+        auto v = (char *) (obj->get_value());
+        memset(v, 0, 2048);
+        strcpy(v, str.c_str());
+
+        library_->send_object(obj);
+
+//        return Upload(review, UploadOp::UploadUniqueId);
+        return 0;
     }
 
     int ComposeReviewHandler::UploadRating(const Rating &val) {
-        Review review = {
-                .req_id = val.req_id,
-                .rating = val.rating
-        };
-        return Upload(review, UploadOp::UploadRating);
+//        Review review = {
+//                .req_id = val.req_id,
+//                .rating = val.rating
+//        };
+//        return Upload(review, UploadOp::UploadRating);
+        json j;
+        j["req_id"]=val.req_id;
+        j["rating"]=val.rating;
+
+        auto str = j.dump();
+        auto obj = library_->create_object("exp02_store_review_4", true, 2048);
+
+        auto v = (char *) (obj->get_value());
+        memset(v, 0, 2048);
+        strcpy(v, str.c_str());
+
+        library_->send_object(obj);
+
+        return 0;
     }
 
     int ComposeReviewHandler::UploadMovieId(const MovieId &val) {
-        Review review{};
-        review.req_id = val.req_id;
-        strcpy(review.movie_id, val.movie_id);
-        return Upload(review, UploadOp::UploadMovieId);
+//        Review review{};
+//        review.req_id = val.req_id;
+//        strcpy(review.movie_id, val.movie_id);
+//        return Upload(review, UploadOp::UploadMovieId);
+        json j;
+        j["req_id"]=val.req_id;
+        j["movie_id"]=val.movie_id;
+
+        auto str = j.dump();
+        auto obj = library_->create_object("exp02_store_review_4", true, 2048);
+
+        auto v = (char *) (obj->get_value());
+        memset(v, 0, 2048);
+        strcpy(v, str.c_str());
+
+        library_->send_object(obj);
+        return 0;
     }
 
 }

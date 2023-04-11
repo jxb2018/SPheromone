@@ -34,7 +34,7 @@ int main(int argc, char **argv) {
     dep.push_back({{"exp02_upload_uniqueid_1"}, {"exp02_upload_uniqueid_3"}, DIRECT});
     dep.push_back({{"exp02_upload_movieid_1"}, {"exp02_upload_rating_2", "exp02_upload_movieid_3"}, DIRECT});
     dep.push_back({{"exp02_upload_rating_2"}, {"exp02_upload_rating_3"}, DIRECT});
-    dep.push_back({{"exp02_upload_text_3", "exp02_upload_movieid_3", "exp02_upload_rating_3", "exp02_upload_unique_3"}, {"exp02_store_review_4"}, MANY_TO_ONE});
+    dep.push_back({{"exp02_upload_text_3", "exp02_upload_movieid_3", "exp02_upload_rating_3", "exp02_upload_uniqueid_3"}, {"exp02_store_review_4"}, MANY_TO_ONE});
 
     client.register_app(app_name, funcs, dep);
 

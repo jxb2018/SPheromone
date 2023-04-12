@@ -15,6 +15,8 @@ include_directories(include)
 include_directories(common/include)
 include_directories(src-gen/)
 include_directories(deps/libmc)
+include_directories(deps/json/include)
+
 
 # deps
 add_subdirectory(deps/shm-ipc shm-ipc)

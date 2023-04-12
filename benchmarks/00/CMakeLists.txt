@@ -1,4 +1,4 @@
-set(LIBRARY_OUTPUT_PATH /tmp/shm)
+set(LIBRARY_OUTPUT_PATH /tmp/shm_dzl)
 
 include_directories(utils/)
 

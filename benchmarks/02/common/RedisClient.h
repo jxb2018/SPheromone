@@ -3,12 +3,12 @@
 
 #include <memory>
 #include <string>
-#include <hiredis/hiredis.h>
 
 #include "MediaServiceTypes.h"
 #include "logger.h"
 #include "GenericClient.h"
 #include "FaasWorker.h"
+#include "hiredis.h"
 
 namespace media_service {
 

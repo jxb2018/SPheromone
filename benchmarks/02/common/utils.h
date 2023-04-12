@@ -32,7 +32,7 @@ namespace media_service {
     };
 
     int load_config(json *config_json) {
-        auto config_path = GetEnvVariable("CONFIG_PATH", "");
+        auto config_path = GetEnvVariable("STORE_SERVICE_CONFIG_PATH", "");
         return load_config_file(config_path, config_json);
     }
 

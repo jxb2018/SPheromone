@@ -1,4 +1,3 @@
 #!/bin/bash
-build_dir=SPheromone
-#build_dir=/tmp/lumine-benchmarks
+build_dir=/tmp/SPheromone129
 kill -9 `ps x | grep ${build_dir} | grep -v grep | awk '{print $1}'`

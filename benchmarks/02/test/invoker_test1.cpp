@@ -13,9 +13,11 @@ int main(int argc, char **argv) {
 
     // step2: invoke
     std::vector<std::string> args;
-//    args.emplace_back(argv[1]); // function chain length, like "4"
-//    args.emplace_back(argv[2]); // payload size
-//    client.call_app(app_name, "exp02_send_review_4", args);
+    args.emplace_back("1"); // req_id
+    args.emplace_back("Avengers: Endgame"); // title
+    args.emplace_back("1"); // rating
+    args.emplace_back("111111111111111111111111122222222222222"); //text
+
     client.call_app(app_name, "exp02_web_server_0", args);
 
     return 0;

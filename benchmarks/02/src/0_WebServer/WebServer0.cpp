@@ -13,22 +13,22 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
     using json = nlohmann::json;
 
     json j;
-    j["req_id"] = 1;
-    j["rating"] = 1;
-    j["title"] = utils::RandomString(64);
-    j["text"] = utils::RandomString(64);
+    j["req_id"] = std::stol(arg_values[0]);
+    j["title"] = arg_values[1];
+    j["rating"] = std::stoi(arg_values[2]);
+    j["text"] = arg_values[3];
     j["movie_id"] = utils::RandomString(64);
 //    j["title"] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 //    j["text"] = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
 //    j["movie_id"] = "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc";
 
     string str = j.dump();
-    // text register movieid
-    auto obj = library->create_object("exp02_register_movieid_1", true, 1024);
-    auto val = (char *) (obj->get_value());
-    memset(val, 0, 1024);
-    strcpy(val, str.c_str());
-    library->send_object(obj);
+//    // text register movieid
+//    auto obj = library->create_object("exp02_register_movieid_1", true, 1024);
+//    auto val = (char *) (obj->get_value());
+//    memset(val, 0, 1024);
+//    strcpy(val, str.c_str());
+//    library->send_object(obj);
 
     // text text service
     auto obj1 = library->create_object("exp02_upload_text_1", true, 1024);

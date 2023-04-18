@@ -6,6 +6,7 @@
 #include "ReviewStorageHandler.h"
 #include <nlohmann/json.hpp>
 #include <string>
+#include "utils_for_test.h"
 
 using namespace media_service;
 
@@ -15,9 +16,9 @@ static ClientPool<MCClient> *g_mc_client_pool;
 extern "C" {
 int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
 
-    std::cout<<"input is:"<<std::endl;
-    for(int i=0;i<arg_size;i++){
-        std::cout<<arg_values[i]<<std::endl;
+    std::cout << "input is:" << std::endl;
+    for (int i = 0; i < arg_size; i++) {
+        std::cout << arg_values[i] << std::endl;
     }
 
     using json = nlohmann::json;
@@ -25,17 +26,17 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
     init_review_storage(g_mongodb_client_pool, g_mc_client_pool);
 
     json j;
-    for(int i=0;i<arg_size;i++){
+    for (int i = 0; i < arg_size; i++) {
         j.merge_patch(json::parse(arg_values[i]));
     }
 
     auto review = new Review();
-    review->review_id=j["review_id"];
+    review->review_id = j["review_id"];
 //    review->user_id=j["user_id"];
-    review->req_id=j["req_id"];
+    review->req_id = j["req_id"];
     strcpy(review->text, j["text"].get<std::string>().c_str());
     strcpy(review->movie_id, j["movie_id"].get<std::string>().c_str());
-    review->rating=j["rating"];
+    review->rating = j["rating"];
 //    review->timestamp=j["timestamp"];
 
 //    std::cout << "review_id: " << review->review_id << std::endl;
@@ -48,6 +49,21 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
 
     auto handler = new ReviewStorageHandler(g_mc_client_pool, g_mongodb_client_pool);
     int ret = handler->StoreReview(*review);
+
+    auto gateway_addr = utils::GetEnvVariable("LUMINE_GATEWAY_ADDR", "");
+    auto gateway_port = utils::GetEnvVariable("LUMINE_GATEWAY_PORT", "");
+    if (!gateway_addr.empty() && !gateway_port.empty()) {
+        auto request_payload = std::to_string(j["req_id"].get<long>());
+
+        auto request = utils::Socket(gateway_addr.c_str(), std::stoi(gateway_port));
+        utils::HttpParser *http_parser = nullptr;
+
+        if (request.conn() < 0) {
+            perror("Failed to connect");
+            return -1;
+        }
+        request.issue_http_request("POST", "/function/exp09End", request_payload.c_str());
+    }
 
     std::cout << "StoreReview4 finished!" << std::endl;
 

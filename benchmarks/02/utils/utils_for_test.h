@@ -19,7 +19,6 @@
 #include <netinet/tcp.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <cstdlib>
 
 #include "http_parser.h"
 
@@ -221,19 +220,19 @@ namespace utils {
 
             // Set socket opt
             int opt = 1;
-            if (setsockopt(sock_, IPPROTO_TCP, TCP_NODELAY, (char *) &opt, sizeof(int)) != 0) {
+            if(setsockopt(sock_, IPPROTO_TCP, TCP_NODELAY, (char *) &opt, sizeof(int))!=0){
                 perror("Set socket opt error \n");
                 return -1;
             }
 
             // bind
-            if (bind(sock_, (struct sockaddr *) &serv_addr_, sizeof(serv_addr_)) < 0) {
+            if(bind(sock_, (struct sockaddr *) &serv_addr_, sizeof(serv_addr_)) < 0){
                 perror("Bind error \n");
                 return -1;
             }
 
             // listen
-            if (listen(sock_, SOMAXCONN) < 0) {
+            if(listen(sock_, SOMAXCONN) < 0) {
                 perror("listen error \n");
                 return -1;
             }
@@ -242,37 +241,27 @@ namespace utils {
         }
 
         // return fd
-        int waiting_request() {
+        int waiting_request(){
             int addrlen = sizeof(serv_addr_);
-            int new_socket = accept(sock_, (struct sockaddr *) &serv_addr_, (socklen_t *) &addrlen);
+            int new_socket = accept(sock_, (struct sockaddr *)&serv_addr_, (socklen_t *)&addrlen);
             return new_socket;
         }
 
-        int issue_http_request(const char *method, const char *url_path, const void *payload, int payload_size) {
-            std::string http_header = fmt::format("{} {} HTTP/1.1\n"
+        int issue_http_request(const char *method, const char *url_path, const char *payload) {
+            std::string message = fmt::format("{} {} HTTP/1.1\n"
                                               "Host: {}:{}\n"
                                               "User-Agent: curl/7.74.0\n"
                                               "Accept: */*\n"
                                               "Content-Length: {}\n"
                                               "Content-Type: application/x-www-form-urlencoded\n"
-                                              "\n", method, url_path, ip_, port_, payload_size);
+                                              "\n"
+                                              "{}", method, url_path, ip_, port_, strlen(payload), payload);
 
-            char send_buf[1024];
-            // header
-            const char *header = http_header.c_str();
-            size_t header_len = strlen(header);
-            memcpy(send_buf, header, header_len);
+            const char *send_buf = message.c_str();
+            size_t send_length = message.length();
 
-            // body
-            auto body = reinterpret_cast<const char *>(payload);
-            size_t body_len = payload_size;
-            memcpy(send_buf + header_len, body, body_len);
-
-            // header + body
-            size_t send_length = header_len + payload_size;
-
-            // send
             int nsent, total_nsent = 0;
+
             while (total_nsent < send_length) {
                 nsent = send(sock_, send_buf + total_nsent, send_length - total_nsent, 0);
                 total_nsent += nsent;

@@ -22,7 +22,7 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
     auto handler = new ComposeReviewHandler(library);
     int ret = handler->UploadUniqueId(*unique_id);
 
-    std::cout << "UploadUniqueId3 finished!" << std::endl;
+//    std::cout << "UploadUniqueId3 finished!" << std::endl;
 
     return ret;
 }

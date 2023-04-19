@@ -51,7 +51,7 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
     strcpy(val3, str.c_str());
     library->send_object(obj3);
 
-    std::cout << "WebServer0 finished!" << std::endl;
+//    std::cout << "WebServer0 finished!" << std::endl;
 
     return 0;
 }

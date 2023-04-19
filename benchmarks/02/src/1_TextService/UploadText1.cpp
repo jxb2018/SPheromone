@@ -22,7 +22,7 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
     auto handler = new TextHandler(library);
     int ret = handler->UploadText(*text);
 
-    std::cout << "UploadText1 finished!" << std::endl;
+//    std::cout << "UploadText1 finished!" << std::endl;
 
     return ret;
 }

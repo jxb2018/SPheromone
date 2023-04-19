@@ -23,7 +23,7 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
     auto handler = new ComposeReviewHandler(library);
     int ret = handler->UploadMovieId(*movie_id);
 
-    std::cout << "UploadMovieId3 finished!" << std::endl;
+//    std::cout << "UploadMovieId3 finished!" << std::endl;
 
     return ret;
 }

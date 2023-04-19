@@ -5,8 +5,8 @@ manager:
 
 # For Coordinator
 coordinator:
-  coord_threads: 1
-  io_threads: 1
+  coord_threads: 4
+  io_threads: 4
   manager: 192.168.1.129
   ip:
     private: 192.168.1.129
@@ -16,15 +16,15 @@ coordinator:
 # For scheduler
 scheduler:
   threads:
-    coord: 1
-    io: 1
+    coord: 4
+    io: 4
   func_dir: /tmp/shm/
   delay: 0
   shared: 1
   forward_or_reject: 0
   user:
     ip: 192.168.1.129
-    executor: 4
+    executor: 24
     routing-elb: 192.168.1.129
     coord:
       - 192.168.1.129

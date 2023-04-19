@@ -20,7 +20,7 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
     auto handler = new UniqueIdHandler(library);
     int ret = handler->UploadUniqueId(req_id);
 
-    std::cout << "UploadUniqueId1 finished!" << std::endl;
+//    std::cout << "UploadUniqueId1 finished!" << std::endl;
 
     return ret;
 }

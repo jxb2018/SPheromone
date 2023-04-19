@@ -28,7 +28,7 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
     auto handler = new RatingHandler(library, g_redis_client_pool);
     int ret = handler->UploadRating(*movie_id);
 
-    std::cout << "UploadRating2 finished!" << std::endl;
+//    std::cout << "UploadRating2 finished!" << std::endl;
 
     return ret;
 }

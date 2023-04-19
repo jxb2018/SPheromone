@@ -22,7 +22,7 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
     auto handler = new ComposeReviewHandler(library);
     int ret = handler->UploadRating(*rating);
 
-    std::cout << "UploadRating3 finished!" << std::endl;
+//    std::cout << "UploadRating3 finished!" << std::endl;
 
     return ret;
 }

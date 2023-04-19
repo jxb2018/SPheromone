@@ -29,7 +29,7 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
     auto handler = new MovieIdHandler(library, g_mc_client_pool, g_mongodb_client_pool);
     int ret = handler->RegisterMovieId(*val);
 
-    std::cout << "RegisterMovieId finished!" << std::endl;
+//    std::cout << "RegisterMovieId finished!" << std::endl;
 
     return ret;
 }

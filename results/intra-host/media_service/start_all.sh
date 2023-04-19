@@ -13,18 +13,18 @@ exp02_upload_rating_2 exp02_upload_uniqueid_1 exp02_upload_text_1 exp02_upload_m
 exp02_web_server_0 exp02_register_test1 exp02_invoker_test1 -- -j 16"
 
 # start manager coordinator scheduler
-#ssh -p 22 lgw@192.168.1.129 "export CONFIG_FILE=${config_file_129}; \
-#export STORE_SERVICE_CONFIG_PATH=${service_config_file}; \
-#/tmp/SPheromone129/manager/manager 1>/tmp/sp02/manager.log 2>&1 & \
-#/tmp/SPheromone129/coordinator/coordinator 1>/tmp/sp02/coordinator.log 2>&1 & \
-#/tmp/SPheromone129/scheduler/scheduler 1>/tmp/sp02/scheduler.log 2>&1 &"
-
 ssh -p 22 lgw@192.168.1.129 "export CONFIG_FILE=${config_file_129}; \
 export STORE_SERVICE_CONFIG_PATH=${service_config_file}; \
-/tmp/SPheromone129/manager/manager 1>/tmp/sp02/manager.log 2>&1 & "
+/tmp/SPheromone129/manager/manager 1>/tmp/sp02/manager.log 2>&1 & \
+/tmp/SPheromone129/coordinator/coordinator 1>/tmp/sp02/coordinator.log 2>&1 & \
+/tmp/SPheromone129/scheduler/scheduler 1>/tmp/sp02/scheduler.log 2>&1 &"
+
+#ssh -p 22 lgw@192.168.1.129 "export CONFIG_FILE=${config_file_129}; \
+#export STORE_SERVICE_CONFIG_PATH=${service_config_file}; \
+#/tmp/SPheromone129/manager/manager 1>/tmp/sp02/manager.log 2>&1 & "
 
 
-thread_num=8
+thread_num=24
 # start executor
 for ((i = 0; i < ${thread_num}; i++)); do
   ssh -p 22 lgw@192.168.1.129 "export CONFIG_FILE=${config_file_129}; \
@@ -36,6 +36,6 @@ done
 
 manager_ip="192.168.1.129"
 # register
-#ssh -p 22 lgw@192.168.1.129 "export CONFIG_FILE=${config_file_129}; \
-#export MANAGER_IP=${manager_ip}; \
-# /tmp/SPheromone129/benchmarks/exp02/exp02_register_test1"
+ssh -p 22 lgw@192.168.1.129 "export CONFIG_FILE=${config_file_129}; \
+export MANAGER_IP=${manager_ip}; \
+ /tmp/SPheromone129/benchmarks/exp02/exp02_register_test1"

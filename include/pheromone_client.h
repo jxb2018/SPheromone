@@ -147,6 +147,7 @@ void PheromoneClient::register_app(std::string app_name, std::vector<std::string
     AppRegistration msg;
 
     auto coord_thread = get_coord(app_name);
+    msg.set_app_name(app_name);
 
     for (auto &func: funcs)
         msg.add_functions(func);

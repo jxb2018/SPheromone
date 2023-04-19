@@ -454,7 +454,10 @@ public:
             }
         }
 
-        send_request(forwardCall, socket_cache_[app_coord_map_[app_name].forward_func_connect_address()]);
+
+        const string addr = app_coord_map_[app_name].forward_func_connect_address();
+
+        send_request(forwardCall, socket_cache_.At(addr));
     }
 
     void get_kvs_async(string &key) {

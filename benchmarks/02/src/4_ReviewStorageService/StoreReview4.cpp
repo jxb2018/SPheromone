@@ -13,17 +13,22 @@ using namespace media_service;
 static mongoc_client_pool_t *g_mongodb_client_pool;
 static ClientPool<MCClient> *g_mc_client_pool;
 
+auto status = init_review_storage(g_mongodb_client_pool, g_mc_client_pool);
+
+auto gateway_addr = utils::GetEnvVariable("LUMINE_GATEWAY_ADDR", "");
+auto gateway_port = utils::GetEnvVariable("LUMINE_GATEWAY_PORT", "");
+
+auto request = utils::Socket(gateway_addr.c_str(), std::stoi(gateway_port));
+
 extern "C" {
 int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
 
-    std::cout << "input is:" << std::endl;
-    for (int i = 0; i < arg_size; i++) {
-        std::cout << arg_values[i] << std::endl;
-    }
+//    std::cout << "input is:" << std::endl;
+//    for (int i = 0; i < arg_size; i++) {
+//        std::cout << arg_values[i] << std::endl;
+//    }
 
     using json = nlohmann::json;
-
-    init_review_storage(g_mongodb_client_pool, g_mc_client_pool);
 
     json j;
     for (int i = 0; i < arg_size; i++) {
@@ -50,13 +55,9 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
     auto handler = new ReviewStorageHandler(g_mc_client_pool, g_mongodb_client_pool);
     int ret = handler->StoreReview(*review);
 
-    auto gateway_addr = utils::GetEnvVariable("LUMINE_GATEWAY_ADDR", "");
-    auto gateway_port = utils::GetEnvVariable("LUMINE_GATEWAY_PORT", "");
+
     if (!gateway_addr.empty() && !gateway_port.empty()) {
         auto request_payload = std::to_string(j["req_id"].get<long>());
-
-        auto request = utils::Socket(gateway_addr.c_str(), std::stoi(gateway_port));
-        utils::HttpParser *http_parser = nullptr;
 
         if (request.conn() < 0) {
             perror("Failed to connect");

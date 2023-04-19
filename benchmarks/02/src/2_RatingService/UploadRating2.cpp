@@ -10,13 +10,12 @@
 using namespace media_service;
 
 static ClientPool<RedisClient> *g_redis_client_pool;
+auto status = init_rating(g_redis_client_pool);
 
 extern "C" {
 int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
 
     using json = nlohmann::json;
-
-    init_rating(g_redis_client_pool);
 
     json j = json::parse(arg_values[0]);
 

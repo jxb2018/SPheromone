@@ -477,7 +477,7 @@ void run(CommHelperInterface *helper, Address ip, unsigned thread_id, unsigned e
             // executor busy flag
             if (str[1] == 6) {
                 executor_status_map[executor_id] = 3;
-                // helper->update_status(get_avail_executor_num(executor_status_map), function_cache);
+//                 helper->update_status(get_avail_executor_num(executor_status_map), function_cache);
             }
 
             // executor available flag
@@ -487,7 +487,7 @@ void run(CommHelperInterface *helper, Address ip, unsigned thread_id, unsigned e
                 } else {
                     executor_status_map[executor_id] = 1;
                 }
-                // helper->update_status(get_avail_executor_num(executor_status_map), function_cache);
+//                 helper->update_status(get_avail_executor_num(executor_status_map), function_cache);
             }
         }
 

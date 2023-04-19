@@ -12,12 +12,12 @@ using namespace media_service;
 static mongoc_client_pool_t *g_mongodb_client_pool;
 static ClientPool<MCClient> *g_mc_client_pool;
 
+auto status = init_movie_id(g_mongodb_client_pool, g_mc_client_pool);
+
 extern "C" {
 int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
 
     using json = nlohmann::json;
-
-    init_movie_id(g_mongodb_client_pool, g_mc_client_pool);
 
     json j = json::parse(arg_values[0]);
 

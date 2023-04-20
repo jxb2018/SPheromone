@@ -1,9 +1,10 @@
-set(LIBRARY_OUTPUT_PATH /tmp/shm_dzl)
+set(LIBRARY_OUTPUT_PATH /tmp/shm)
 
 include_directories(utils/)
 
 set(EXP06_LIBRARY_MARKETDATA exp06_marketdata)
 add_library(${EXP06_LIBRARY_MARKETDATA} SHARED src/stage_0/marketdata.cpp)
+target_link_libraries(${EXP06_LIBRARY_MARKETDATA} pthread)
 set_target_properties(${EXP06_LIBRARY_MARKETDATA} PROPERTIES OUTPUT_NAME ${EXP06_LIBRARY_MARKETDATA})
 set_target_properties(${EXP06_LIBRARY_MARKETDATA} PROPERTIES PREFIX "")
 

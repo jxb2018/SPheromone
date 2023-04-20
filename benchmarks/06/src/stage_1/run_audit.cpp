@@ -16,6 +16,7 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
     char * data_path;
     if(!(data_path= getenv("FinraDataPath"))){
         perror("please set env FinraDataPath");
+        return -1;
     }
     json j;
     std::ifstream jfile(std::string(data_path)+"portfolios.json");
@@ -43,8 +44,9 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
 
 
     // step2: generate payload
-    auto obj = library->create_object("exp06_marginbalance", true, re_str.size());
+    auto obj = library->create_object("exp06_marginbalance", true, re_str.size()+1);
     auto val = static_cast<char *>(obj->get_value());
+    memset(val, 0, re_str.size()+1);
     strncpy(val, re_str.c_str(), re_str.length());
     library->send_object(obj);
 

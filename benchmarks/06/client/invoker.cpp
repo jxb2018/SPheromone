@@ -10,14 +10,14 @@ int main(int argc, char *argv[]) {
 
     std::string app_name = "exp06";
 
-//    if(argc != 3){
-//        std::cerr << "bad input!" << std::endl;
-//        return -1;
-//    }
+    if(argc != 3){
+        std::cerr << "bad input!" << std::endl;
+        return -1;
+    }
     // args
     std::vector<std::string> args;
-    args.emplace_back(argv[1]); // function chain length
-//    args.emplace_back(argv[2]); // payload size
+    args.emplace_back(argv[1]); // fanout num
+    args.emplace_back(argv[2]); // req_id
 
     // invoke
     client.call_app(app_name, "exp06_marketdata", args);

@@ -6,10 +6,16 @@
 #include <iostream>
 #include "utils.h"
 #include <nlohmann/json.hpp>
+#include "utils_for_test.h"
 
 using json = nlohmann::json;
 
 #define MAX(x, y) x>y?x:y;
+
+auto gateway_addr = utils::GetEnvVariable("LUMINE_GATEWAY_ADDR", "");
+auto gateway_port = utils::GetEnvVariable("LUMINE_GATEWAY_PORT", "");
+
+auto request = utils::Socket(gateway_addr.c_str(), std::stoi(gateway_port));
 
 extern "C" {
 bool checkMarginBalance(char *marketData) {
@@ -17,25 +23,37 @@ bool checkMarginBalance(char *marketData) {
 }
 int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
     int size = 0;
+
     for (int i = 0; i < arg_size; i++) {
         size += strlen(arg_values[i]);
     }
-    std::cout << "input size is:" << size << std::endl;
+//    std::cout << "input size is:" << size << std::endl;
 
     json j = json::parse(arg_values[0]);
 
     bool is_valid = true;
+    std::string req_id;
     for (int i = 0; i < arg_size; i++) {
         bool valid_last_px = j.at("valid").get<bool>();
         is_valid = is_valid && valid_last_px;
+        req_id = j.at("req_id").get<std::string>();
     }
     auto marketData = arg_values[0];
     bool marginSatisfied = checkMarginBalance(marketData);
 
+
+    if (!gateway_addr.empty() && !gateway_port.empty()) {
+        if (request.conn() < 0) {
+            perror("Failed to connect");
+            return -1;
+        }
+        request.issue_http_request("POST", "/function/exp09End", req_id.c_str());
+    }
+
     if (is_valid && marginSatisfied) {
-        std::cout << "succeed!" << std::endl;
+        std::cout << "MarginBalance, succeed, " << req_id << std::endl;
     } else {
-        std::cout << "failed!" << std::endl;
+        std::cout << "MarginBalance, failed, " << req_id << std::endl;
     }
 
     return 0;

@@ -94,6 +94,7 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
         j.push_back(row);
     }
     int fanout_num = std::stoi(arg_values[0]);
+    auto req_id = arg_values[1];
 
     std::string re_str = j.dump();
 
@@ -102,7 +103,8 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
     std::string fanout_fun_name = "exp06_run_audit";
     for (int i = 1; i <= fanout_num; i++) {
         std::string func_name = fanout_fun_name + "_" + std::to_string(i);
-        auto tuple = new Tuple(library, func_name, re_str);
+//        auto tuple = new Tuple(library, func_name, re_str);
+        auto tuple = new Tuple(library, func_name, req_id);
 
         pthread_t tid;
         pthread_create(&tid, nullptr, create_and_send_obj, (void *) tuple);
@@ -113,6 +115,8 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
     for (auto thread: threads) {
         pthread_join(thread, nullptr);
     }
+
+    std::cout << "MarketData REQ_ID : " << req_id << std::endl;
 
     return 0;
 }

@@ -28,6 +28,7 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
 //        std::cout << arg_values[i] << std::endl;
 //    }
 
+    auto start_time = utils::get_timestamp_us();
     using json = nlohmann::json;
 
     json j;
@@ -66,7 +67,8 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
         request.issue_http_request("POST", "/function/exp09End", request_payload.c_str());
     }
 
-    std::cout << "StoreReview4 finished!" << std::endl;
+    auto end_time = utils::get_timestamp_us();
+    std::cout << "StoreReview4 finished!, token " << end_time - start_time << std::endl;
 
     return ret;
 }

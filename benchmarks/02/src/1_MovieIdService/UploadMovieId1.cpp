@@ -6,6 +6,7 @@
 #include "MovieIdHandler.h"
 #include <nlohmann/json.hpp>
 #include <string>
+#include "utils_for_test.h"
 
 using namespace media_service;
 
@@ -17,6 +18,7 @@ auto status = init_movie_id(g_mongodb_client_pool, g_mc_client_pool);
 extern "C" {
 int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
 
+    auto start_time = utils::get_timestamp_us();
     using json = nlohmann::json;
 
     json j = json::parse(arg_values[0]);
@@ -29,7 +31,8 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
     auto handler = new MovieIdHandler(library, g_mc_client_pool, g_mongodb_client_pool);
     int ret = handler->UploadMovieId(*title);
 
-    std::cout << "UploadMovieId1 finished!" << std::endl;
+    auto end_time = utils::get_timestamp_us();
+    std::cout << "UploadMovieId1 finished!, token " << end_time - start_time << std::endl;
 
     return ret;
 }

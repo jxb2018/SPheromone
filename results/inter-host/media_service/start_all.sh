@@ -19,7 +19,7 @@ export STORE_SERVICE_CONFIG_PATH=${service_config_file}; \
 /tmp/SPheromone126/coordinator/coordinator 1>/tmp/sp02/coordinator.log 2>&1 & \
 /tmp/SPheromone126/scheduler/scheduler 1>/tmp/sp02/scheduler.log 2>&1 &"
 
-thread_num=40
+thread_num=2
 # start executor
 ssh -p 22 lgw@192.168.1.129 "for ((i = 0; i < ${thread_num}; i++)); do export CONFIG_FILE=${config_file_129}; \
    export STORE_SERVICE_CONFIG_PATH=${service_config_file}; \

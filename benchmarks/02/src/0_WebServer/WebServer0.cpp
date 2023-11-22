@@ -10,6 +10,9 @@
 extern "C" {
 int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
 
+    auto start_time = utils::get_timestamp_us();
+
+
     using json = nlohmann::json;
 
     json j;
@@ -51,7 +54,10 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
     strcpy(val3, str.c_str());
     library->send_object(obj3);
 
-//    std::cout << "WebServer0 finished!" << std::endl;
+
+    auto end_time = utils::get_timestamp_us();
+
+    std::cout << "WebServer0 finished!, token " << end_time - start_time << std::endl;
 
     return 0;
 }

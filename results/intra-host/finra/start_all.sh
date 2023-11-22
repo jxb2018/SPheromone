@@ -27,11 +27,23 @@ fanout_num=10
 #   export LUMINE_GATEWAY_PORT=8084; \
 #   /tmp/SPheromone129/executor/executor $i 1>/tmp/sp06/executor_${i}.log 2>&1 &"
 #done
+# start executor
+ssh -p 22 lgw@192.168.1.129 "for ((i = 0; i < ${thread_num}; i++)); do export CONFIG_FILE=${config_file_129}; \
+   export FinraDataPath=${finra_data_path}; \
+   export LUMINE_GATEWAY_ADDR=192.168.1.129; \
+   export LUMINE_GATEWAY_PORT=8084; \
+   /tmp/SPheromone129/executor/executor \$i 1>/tmp/sp02/executor_\${i}.log 2>&1 & done"
 
 # copy library file
 #for ((i = 1; i <= ${fanout_num}; i++)); do
 #  ssh -p 22 lgw@192.168.1.129 "cp /tmp/shm/exp06_run_audit.so /tmp/shm/exp06_run_audit_${i}.so"
 #done
+ssh -p 22 lgw@192.168.1.129 "for ((i = 0; i < ${thread_num}; i++)); do export CONFIG_FILE=${config_file_129}; \
+   export FinraDataPath=${finra_data_path}; \
+   export LUMINE_GATEWAY_ADDR=192.168.1.129; \
+   export LUMINE_GATEWAY_PORT=8084; \
+   /tmp/SPheromone129/executor/executor \$i 1>/tmp/sp02/executor_\${i}.log 2>&1 & done"
+
 
 # register
 manager_ip="192.168.1.129"

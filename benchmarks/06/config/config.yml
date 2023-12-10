@@ -18,7 +18,7 @@ scheduler:
   threads:
     coord: 1
     io: 1
-  func_dir: /tmp/shm_dzl/
+  func_dir: /tmp/shm/
   delay: 0
   shared: 1
   forward_or_reject: 0
@@ -31,7 +31,7 @@ scheduler:
 
 # For Executor
 executor:
-  func_dir: /tmp/shm_dzl/
+  func_dir: /tmp/shm/
   wait: 0
   ip: 127.0.0.1
   thread_id: 0

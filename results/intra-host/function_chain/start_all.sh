@@ -27,7 +27,7 @@ ${build_dir}/coordinator/coordinator 1>${log_dir}/coordinator.log 2>&1 &
 
 ${build_dir}/scheduler/scheduler 1>${log_dir}/scheduler.log 2>&1 &
 
-thread_num=2
+thread_num=80
 
 # shellcheck disable=SC2004
 for ((i = 0; i < ${thread_num}; i++)); do
@@ -36,4 +36,4 @@ done
 
 sleep 1
 
-${build_dir}/benchmarks/00/exp00_register
+${build_dir}/benchmarks/exp00/exp00_register

@@ -6,9 +6,12 @@
 #include "utils.h"
 #include "nlohmann/json.hpp"
 #include <fstream>
+#include "ThreadPool.h"
 
 #define MAX(x, y) x>y?x:y;
 using json = nlohmann::json;
+
+ThreadPool thread_pool(80);
 
 extern "C" {
 std::vector<std::vector<string>> readCSV(string filename) {
@@ -43,31 +46,21 @@ struct Tuple {
     std::string re_str;
 };
 
-//void create_and_send_obj(UserLibraryInterface *library, const std::string &name, const std::string &re_str) {
-//    int size = re_str.length();
-//    auto obj = library->create_object(name, true, size);
-//    auto val = static_cast<char *>(obj->get_value());
-//    if (re_str.length() > 0) {
-//        strncpy(val, re_str.c_str(), re_str.length());
-//    } else {
-//        memset(val, 0xff, size);
-//        val[size - 1] = '\0';
-//    }
-//    library->send_object(obj);
-//}
-
-void *create_and_send_obj(void *arg) {
+int create_and_send_obj(void *arg) {
 
     auto tuple = (Tuple *) arg;
-    auto re_str = tuple->re_str;
+    std::string re_str = tuple->re_str;
     auto library = tuple->library;
     auto name = tuple->func_name;
+
+    re_str += ",";
+    re_str += std::to_string(exp05::get_timestamp_us());
 
     int size = re_str.length();
     auto obj = library->create_object(name, true, size + 1);
     auto val = static_cast<char *>(obj->get_value());
     memset(val, 0, size + 1);
-    if (re_str.length() > 0) {
+    if (size > 0) {
         strncpy(val, re_str.c_str(), re_str.length());
     } else {
         memset(val, 0xff, size);
@@ -76,7 +69,7 @@ void *create_and_send_obj(void *arg) {
     library->send_object(obj);
 
     delete tuple;
-    return nullptr;
+    return 0;
 }
 
 int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
@@ -98,25 +91,21 @@ int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
 
     std::string re_str = j.dump();
 
-    std::vector<pthread_t> threads;
-
     std::string fanout_fun_name = "exp06_run_audit";
+
+    std::vector<std::future<int>> results;
     for (int i = 1; i <= fanout_num; i++) {
         std::string func_name = fanout_fun_name + "_" + std::to_string(i);
-//        auto tuple = new Tuple(library, func_name, re_str);
         auto tuple = new Tuple(library, func_name, req_id);
 
-        pthread_t tid;
-        pthread_create(&tid, nullptr, create_and_send_obj, (void *) tuple);
-
-        threads.push_back(tid);
+        results.emplace_back(thread_pool.enqueue(create_and_send_obj, (void *)tuple));
     }
 
-    for (auto thread: threads) {
-        pthread_join(thread, nullptr);
+    for(auto && result: results){
+        result.get();
     }
 
-    std::cout << "MarketData REQ_ID : " << req_id << std::endl;
+//    std::cout << "MarketData REQ_ID : " << req_id << std::endl;
 
     return 0;
 }

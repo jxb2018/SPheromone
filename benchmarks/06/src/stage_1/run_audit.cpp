@@ -14,7 +14,7 @@ extern "C" {
 int handle(UserLibraryInterface *library, int arg_size, char **arg_values) {
 //    std::cout<<"input size is:"<<strlen(arg_values[0])<<std::endl;
 
-    std::cout << "RunAudit, input_data = " << arg_values[0] << std::endl;
+//    std::cout << "RunAudit, input_data = " << arg_values[0] << std::endl;
 
     char *data_path;
     if (!(data_path = getenv("FinraDataPath"))) {
